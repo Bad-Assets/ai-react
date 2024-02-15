@@ -161,7 +161,7 @@ function App() {
   }
 
   // Funtion to handle screen transitions and calls to the generateConstellation function
-  // Video handling would be done in here as well if/when we decide to implement animations\
+  // Video handling would be done in here as well if/when we decide to implement animations
   // for constelllation creation
   const constellationBirth = (seed) => {
     switch (seed) {
