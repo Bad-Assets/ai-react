@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Line } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import Star from "./Star";
@@ -7,25 +7,44 @@ import Star from "./Star";
 
 const Constellation = ({ location, speed, colorSeed }) => {
   let constellationArray = []; //array to hold star components
+  let colors; //variable to store color arrays
   const randomLengths = [
     Math.floor(Math.random() * (10 - 5) + 5),
     Math.floor(Math.random() * (6 - 3) + 3),
     Math.floor(Math.random() * (3 - 1) + 1),
   ]; //array to hold different randomly generated array lengths. This randomizes how many stars are in a given constellation
 
+  //This loop handles the randomization and initialization of each individual star in a given constellation.
+  //if you wanna change any property of an individual star in a constellation, this is where you do it
   for (
     let i = 0;
     i < randomLengths[Math.floor(Math.random() * (2 - 0) + 0)];
     i++
   ) {
     const offset = [
-      Math.random() * (6 - 3) - 3,
-      Math.random() * (6 - 3) - 3,
+      Math.random() * (8 - 3) - 3,
+      Math.random() * (6 - 4) - 3,
       Math.random() * (6 - 3) - 3,
     ]; //random location offet to make sure that the star comps are more naturally spaced out
-    const newPosition = location.map((coord, index) => coord + offset[index]);
 
-    constellationArray[i] = newPosition;
+    //maps through inital locations on every loop to add offset to stars AND randomize star scale every loop
+    const newPosition = location.map((coord, index) => coord + offset[index]);
+    const sScale = Math.floor(Math.random() * (6 - 3) - 3); //star scale randomizer
+
+    switch (colorSeed) {
+      case 1:
+        colors = ["lightBlue", "cyan", "aquamarine"];
+        break;
+      case 2:
+        colors = ["pink", "paleVioletRed", "salmon"];
+        break;
+      case 3:
+        colors = ["violet", "mediumVioletRed", "plum"];
+        break;
+    }
+
+    // constellationArray[i] = newPosition;
+    constellationArray[i] = { location: newPosition, scale: sScale };
   }
 
   const lines = []; //array to hold lines drawn between stars
@@ -33,8 +52,12 @@ const Constellation = ({ location, speed, colorSeed }) => {
     lines.push(
       <Line
         key={i}
-        points={[constellationArray[i], constellationArray[i + 1]]}
+        points={[
+          constellationArray[i].location,
+          constellationArray[i + 1].location,
+        ]}
         color={0xffffff}
+        lineWidth={1}
       />
     );
   }
@@ -54,8 +77,13 @@ const Constellation = ({ location, speed, colorSeed }) => {
   return (
     <>
       <mesh ref={meshRef} position={location}>
-        {constellationArray.map((newPosition, index) => (
-          <Star key={index} location={newPosition} colorSeed={colorSeed} />
+        {constellationArray.map((object, index) => (
+          <Star
+            key={index}
+            location={object.location}
+            color={colors[Math.floor(Math.random() * (3.1 - 0) -0)]}
+            starScale={object.scale}
+          />
         ))}
         {<Star location={location} />}
         {lines}

@@ -226,7 +226,7 @@ function App() {
           <Constellation
             speed={Math.random() * (0.2 - 0.1) - 0.1}
             key={generateUniqueKey()}
-            colorSeed={"pink"}
+            colorSeed={1}
             location={[
               Math.floor(Math.random() * (20 - 0) - 0),
               Math.floor(Math.random() * (2 - 0) - 0),
@@ -241,7 +241,7 @@ function App() {
           <Constellation
             speed={Math.random() * (0.2 - 0.1) - 0.1}
             key={generateUniqueKey()}
-            colorSeed={"lightBlue"}
+            colorSeed={2}
             location={[
               Math.floor(Math.random() * (20 - 5) - 5),
               Math.floor(Math.random() * (2 - 0) - 0),
@@ -256,7 +256,7 @@ function App() {
           <Constellation
             speed={Math.random() * (0.2 - 0.1) - 0.1}
             key={generateUniqueKey()}
-            colorSeed={"violet"}
+            colorSeed={3}
             location={[
               Math.floor(Math.random() * (20 - 10) - 10),
               Math.floor(Math.random() * (3 - 0) - 0),
