@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 
-const Star = ({ location }) => {
+const Star = ({ location, colorSeed }) => {
   // This reference gives us direct access to the THREE.Mesh object
   const ref = useRef();
   // Add this component to the render-loop, rotate the mesh every frame
@@ -9,10 +9,10 @@ const Star = ({ location }) => {
   // Return the view, these are regular Threejs elements expressed in JSX
   return (
     <>
-      <mesh position={location} ref={ref} scale={1}>
+      <mesh position={location} ref={ref} scale={Math.random() * (4 - 3) - 3}>
         <sphereGeometry args={[0.02, 128]} />
         <meshStandardMaterial
-          emissive="lightBlue"
+          emissive={colorSeed}
           emissiveIntensity={10}
           toneMapped={true}
         />

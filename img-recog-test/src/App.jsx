@@ -226,6 +226,7 @@ function App() {
           <Constellation
             speed={Math.random() * (0.2 - 0.1) - 0.1}
             key={generateUniqueKey()}
+            colorSeed={"pink"}
             location={[
               Math.floor(Math.random() * (20 - 0) - 0),
               Math.floor(Math.random() * (2 - 0) - 0),
@@ -240,6 +241,7 @@ function App() {
           <Constellation
             speed={Math.random() * (0.2 - 0.1) - 0.1}
             key={generateUniqueKey()}
+            colorSeed={"lightBlue"}
             location={[
               Math.floor(Math.random() * (20 - 5) - 5),
               Math.floor(Math.random() * (2 - 0) - 0),
@@ -254,6 +256,7 @@ function App() {
           <Constellation
             speed={Math.random() * (0.2 - 0.1) - 0.1}
             key={generateUniqueKey()}
+            colorSeed={"violet"}
             location={[
               Math.floor(Math.random() * (20 - 10) - 10),
               Math.floor(Math.random() * (3 - 0) - 0),
@@ -281,7 +284,7 @@ function App() {
       <div className="bg-black max-w-full h-screen flex">
         <div
           id="label-container"
-          className="z-[100] text-white absolute w-[10%] h-[10%] bottom-[20%] bg-transparent"
+          className="z-[100] text-white/[0.5] absolute w-[10%] h-[10%] bottom-[20%] bg-transparent"
         ></div>
 
         <div id="webcam-container">
@@ -337,5 +340,8 @@ export default App;
 
 /**
  * TO DO:
+ * Figure out some sort of way to make each individual star in a given constellation a different color
+ * Try to find ways to make the connecting lines/overall constellation more appealing or aligned with whatever the group decides on interms of final look
+ * Think of further customizations
  * Add some sort of timer to the constellations to make them disappear or something. That OR add "stage hazards" that do things to the stars
  */

@@ -5,7 +5,7 @@ import Star from "./Star";
 
 //A component made up of star components. It handles its own movement independently
 
-const Constellation = ({ location, speed }) => {
+const Constellation = ({ location, speed, colorSeed }) => {
   let constellationArray = []; //array to hold star components
   const randomLengths = [
     Math.floor(Math.random() * (10 - 5) + 5),
@@ -55,8 +55,9 @@ const Constellation = ({ location, speed }) => {
     <>
       <mesh ref={meshRef} position={location}>
         {constellationArray.map((newPosition, index) => (
-          <Star key={index} location={newPosition} />
+          <Star key={index} location={newPosition} colorSeed={colorSeed} />
         ))}
+        {<Star location={location} />}
         {lines}
       </mesh>
     </>
