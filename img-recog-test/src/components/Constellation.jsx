@@ -31,6 +31,7 @@ const Constellation = ({ location, speed, colorSeed }) => {
     const newPosition = location.map((coord, index) => coord + offset[index]);
     const sScale = Math.floor(Math.random() * (6 - 3) - 3); //star scale randomizer
 
+    //determines colors of individual stars. Right now, it's semi-random/array based
     switch (colorSeed) {
       case 1:
         colors = ["lightBlue", "cyan", "aquamarine"];
@@ -67,7 +68,7 @@ const Constellation = ({ location, speed, colorSeed }) => {
   //this creates a mini animation loop to change loaction/orientation values over time
   useFrame(({ clock }) => {
     // Rotate the mesh around the Y axis
-    meshRef.current.rotation.y += 0.001;
+    meshRef.current.rotation.y += 0.0001;
     const elapsedTime = clock.getElapsedTime();
     //orbit the location [0,0,0]
     meshRef.current.position.x = 10 * Math.cos(elapsedTime * speed);
@@ -81,7 +82,7 @@ const Constellation = ({ location, speed, colorSeed }) => {
           <Star
             key={index}
             location={object.location}
-            color={colors[Math.floor(Math.random() * (3.1 - 0) -0)]}
+            color={colors[Math.floor(Math.random() * (3.1 - 0) - 0)]}
             starScale={object.scale}
           />
         ))}

@@ -340,7 +340,6 @@ export default App;
 
 /**
  * TO DO:
- * Figure out some sort of way to make each individual star in a given constellation a different color
  * Try to find ways to make the connecting lines/overall constellation more appealing or aligned with whatever the group decides on interms of final look
  * Think of further customizations
  * Add some sort of timer to the constellations to make them disappear or something. That OR add "stage hazards" that do things to the stars
