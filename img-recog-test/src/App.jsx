@@ -2,8 +2,19 @@ import React, { useState, useEffect, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
 
-import { Bloom, EffectComposer } from "@react-three/postprocessing";
-import { BlurPass, Resizer, KernelSize, Resolution } from "postprocessing";
+import {
+  Bloom,
+  EffectComposer,
+  Pixelation,
+  Glitch,
+} from "@react-three/postprocessing";
+import {
+  BlurPass,
+  Resizer,
+  KernelSize,
+  Resolution,
+  GlitchMode,
+} from "postprocessing";
 
 import Constellation from "./components/Constellation";
 
@@ -19,8 +30,16 @@ function App() {
   const webcamRef = useRef(null); // Reference for webcam object
   const [galaxy, setGalaxy] = useState([]); //parent array for holding all constellations
 
+  // Define state variable to track whether a constellation has been generated after a recognition event
+  const [constellationGenerated, setConstellationGenerated] = useState(false);
+
   // link to model provided by Teachable Machine export panel
-  const URL = "https://teachablemachine.withgoogle.com/models/smA9m7ak-/";
+  // "https://teachablemachine.withgoogle.com/models/smA9m7ak-/"// 3 class model prototype
+  // "https://teachablemachine.withgoogle.com/models/bEFuEcfqt/"// janky 4 class model
+  // "https://teachablemachine.withgoogle.com/models/I84nEtna1/"// more "stable" 4 class model
+  // "https://teachablemachine.withgoogle.com/models/tNzFMd9l8/"//bottle cap type differentiation model
+
+  const URL = "https://teachablemachine.withgoogle.com/models/tNzFMd9l8/";
 
   let model, labelContainer, maxPredictions;
 
@@ -85,108 +104,149 @@ function App() {
     webcamRef.current = webcamObj; // Assign webcam object to the useRef
     window.requestAnimationFrame(loop);
   }
+  //
+  //
+  // //
+  // //
+  // /**
+  //  * PREDICTION AND USER INPUT HANDLING
+  //  * Use model to match user inout to reference class data
+  //  * Allow user key input to activate webcam
+  //  * Call appropriate functions to generate constellations and maintain parent array state
+  //  */
+  // //
+  // //
 
   // Function to let the webcam collect input every frame
-  //
-  //
+  // // run the webcam image through the image model
+  // Define a state variable to track if a prediction has already been made
+  const [predictionMade, setPredictionMade] = useState(false);
+
+  // Function to let the webcam collect input every frame
   async function loop() {
     if (camState && webcamRef.current) {
       webcamRef.current.update(); // update the webcam frame
       await predict();
-      window.requestAnimationFrame(loop);
     }
   }
-  //
-  //
-  /**
-   * PREDICTION AND USER INPUT HANDLING
-   * Use model to match user inout to reference class data
-   * Allow user key input to activate webcam
-   * Call appropriate functions to generate constellations and maintain parent array state
-   */
-  //
-  //
 
-  // Define a state variable to track if a prediction has already been made
-  const [predictionMade, setPredictionMade] = useState(false);
+  // Use useEffect to start the loop
+  useEffect(() => {
+    let frameId;
+    const animate = () => {
+      loop();
+      frameId = window.requestAnimationFrame(animate);
+    };
+    if (camState) {
+      animate();
+    }
+    // Cleanup function to stop the loop when camState is false
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
+  }, [camState, predictionMade]);
 
+  // PREDICT FUNCTION
   // run the webcam image through the image model
   async function predict() {
     if (predictionMade) {
-      return; // Exit early if prediction has already been made
+      return;
     }
 
     let prediction;
+    let percentile = 0.7;
+
     if (isIos) {
       prediction = await model.predict(webcamRef.current.webcam);
     } else {
       prediction = await model.predict(webcamRef.current.canvas);
     }
+
+    // Track whether a constellation has been generated for the current prediction
+    let constellationGenerated = false;
+
     for (let i = 0; i < maxPredictions; i++) {
       const classPrediction =
         prediction[i].className + ": " + prediction[i].probability.toFixed(2);
       labelContainer.childNodes[i].innerHTML = classPrediction;
+
+      // Check if the probability is above the percentile threshold
+      if (parseFloat(prediction[i].probability.toFixed(2)) > percentile) {
+        // Check if a constellation has already been generated
+        if (!constellationGenerated) {
+          // Generate constellation based on the index (i + 1)
+          constellationBirth(i + 1);
+          console.log("generating: ", i + 1);
+          constellationGenerated = true; // Mark that a constellation has been generated
+        }
+      }
     }
 
-    // Check if any prediction is above 0.9
-    const detected = prediction.some(
-      (p) => parseFloat(p.probability.toFixed(2)) > 0.9
-    );
-
-    if (detected) {
-      if (prediction[0].probability.toFixed(2) > 0.9) {
-        constellationBirth(1);
-        alert("1");
-      }
-      if (prediction[1].probability.toFixed(2) > 0.9) {
-        constellationBirth(2);
-        alert("2");
-      }
-      if (prediction[2].probability.toFixed(2) > 0.9) {
-        constellationBirth(3);
-        alert("3");
-      }
-
-      setPredictionMade(true); // Set prediction made to true
-
-      setCamState(false); // Turn off the webcam upon scanning an image so that the user doesn't have to manually do it
-
-      // Reset prediction values(this prevents an infinite loop in which the constellationBirth
-      // function is repeatedly called due to an unchanging probability value of 0.9)
-      prediction.forEach((p) => {
-        p.probability = 0;
-        console.log(p.probability);
-      });
+    // Set prediction made to true only if a constellation has been generated
+    if (constellationGenerated) {
+      setPredictionMade(true);
+      setCamState(false); // Turn off the webcam
     }
+
+    // Reset prediction values after generating constellation
+    prediction.forEach((p) => {
+      p.probability = 0;
+    });
+
+    setPredictionMade(false);
   }
 
-  // Funtion to handle screen transitions and calls to the generateConstellation function
+  // Function to handle screen transitions and calls to the generateConstellation function
   // Video handling would be done in here as well if/when we decide to implement animations
   // for constelllation creation
+
+  // Function to handle screen transitions and calls to the generateConstellation function
   const constellationBirth = (seed) => {
+    if (constellationGenerated) {
+      return; // Exit function early if a constellation has already been made
+    }
+    // console.log("Generated constellation: ", seed);
+
     switch (seed) {
       case 1:
         setTransition("fadeOut");
         setTimeout(() => {
           setTransition("fadeIn");
           generateConstellation(1);
-        }, 3000);
+          // Reset the flag after constellation generation is complete
+          setConstellationGenerated(true);
+        }, 2000);
         break;
       case 2:
         setTransition("fadeOut");
         setTimeout(() => {
           setTransition("fadeIn");
           generateConstellation(2);
-        }, 3000);
+          // Reset the flag after constellation generation is complete
+          setConstellationGenerated(true);
+        }, 2000);
         break;
       case 3:
         setTransition("fadeOut");
         setTimeout(() => {
           setTransition("fadeIn");
           generateConstellation(3);
-        }, 3000);
+          // Reset the flag after constellation generation is complete
+          setConstellationGenerated(true);
+        }, 2000);
+        break;
+      case 4:
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          generateConstellation(4);
+          // Reset the flag after constellation generation is complete
+          setConstellationGenerated(true);
+        }, 2000);
         break;
     }
+
+    setConstellationGenerated(false);
   };
 
   //pressing the 'p' key will turn the webcam on
@@ -230,7 +290,7 @@ function App() {
             location={[
               Math.floor(Math.random() * (20 - 0) - 0),
               Math.floor(Math.random() * (2 - 0) - 0),
-              Math.floor(Math.random() * (10 - 5) - 5),
+              Math.floor(Math.random() * (15 - 10) - 10),
             ]}
           />,
         ]);
@@ -265,7 +325,23 @@ function App() {
           />,
         ]);
         break;
+      case 4:
+        setGalaxy((prevGalaxy) => [
+          ...prevGalaxy,
+          <Constellation
+            speed={Math.random() * (0.1 - 0.0) - 0.0}
+            key={generateUniqueKey()}
+            colorSeed={4}
+            location={[
+              Math.floor(Math.random() * (30 - 10) - 10),
+              Math.floor(Math.random() * (3 - 0) - 0),
+              Math.floor(Math.random() * (80 - 40) - 40),
+            ]}
+          />,
+        ]);
+        break;
     }
+    return;
   }
 
   // troubleshooting purposes
@@ -306,7 +382,11 @@ function App() {
             zIndex: "500",
           }}
         >
-          <OrbitControls autoRotate={true} enablePan={true} />
+          <OrbitControls
+            autoRotate={true}
+            enablePan={true}
+            autoRotateSpeed={0.3}
+          />
           <EffectComposer enabled={true}>
             <Bloom
               intensity={2.0} // The bloom intensity.
@@ -318,6 +398,15 @@ function App() {
               resolutionX={Resolution.AUTO_SIZE} // The horizontal resolution.
               resolutionY={Resolution.AUTO_SIZE} // The vertical resolution.
             />
+            {/* <Pixelation granularity={3} />
+            <Glitch
+              delay={[1.5, 3.5]} // min and max glitch delay
+              duration={[0.6, 1.0]} // min and max glitch duration
+              strength={[0.3, 1.0]} // min and max glitch strength
+              mode={GlitchMode.SPORADIC} // glitch mode
+              active // turn on/off the effect (switches between "mode" prop and GlitchMode.DISABLED)
+              ratio={0.85} // Threshold for strong glitches, 0 - no weak glitches, 1 - no strong glitches.
+            /> */}
           </EffectComposer>
           <Stars
             radius={300}

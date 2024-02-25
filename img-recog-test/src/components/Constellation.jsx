@@ -9,9 +9,9 @@ const Constellation = ({ location, speed, colorSeed }) => {
   let constellationArray = []; //array to hold star components
   let colors; //variable to store color arrays
   const randomLengths = [
-    Math.floor(Math.random() * (10 - 5) + 5),
+    Math.floor(Math.random() * (8 - 5) + 5),
     Math.floor(Math.random() * (6 - 3) + 3),
-    Math.floor(Math.random() * (3 - 1) + 1),
+    Math.floor(Math.random() * (4 - 3) + 3),
   ]; //array to hold different randomly generated array lengths. This randomizes how many stars are in a given constellation
 
   //This loop handles the randomization and initialization of each individual star in a given constellation.
@@ -23,8 +23,8 @@ const Constellation = ({ location, speed, colorSeed }) => {
   ) {
     const offset = [
       Math.random() * (8 - 3) - 3,
-      Math.random() * (6 - 4) - 3,
-      Math.random() * (6 - 3) - 3,
+      Math.random() * (6 - 4) - 4,
+      Math.random() * (4 - 3) - 3,
     ]; //random location offet to make sure that the star comps are more naturally spaced out
 
     //maps through inital locations on every loop to add offset to stars AND randomize star scale every loop
@@ -37,10 +37,13 @@ const Constellation = ({ location, speed, colorSeed }) => {
         colors = ["lightBlue", "cyan", "aquamarine"];
         break;
       case 2:
-        colors = ["pink", "paleVioletRed", "salmon"];
+        colors = ["pink", "beige", "salmon"];
         break;
       case 3:
         colors = ["violet", "mediumVioletRed", "plum"];
+        break;
+      case 4:
+        colors = ["limeGreen", "greenYellow", "green"];
         break;
     }
 
@@ -68,7 +71,7 @@ const Constellation = ({ location, speed, colorSeed }) => {
   //this creates a mini animation loop to change loaction/orientation values over time
   useFrame(({ clock }) => {
     // Rotate the mesh around the Y axis
-    meshRef.current.rotation.y += 0.0001;
+    // meshRef.current.rotation.y += 0.0001;
     const elapsedTime = clock.getElapsedTime();
     //orbit the location [0,0,0]
     meshRef.current.position.x = 10 * Math.cos(elapsedTime * speed);
@@ -86,7 +89,6 @@ const Constellation = ({ location, speed, colorSeed }) => {
             starScale={object.scale}
           />
         ))}
-        {<Star location={location} />}
         {lines}
       </mesh>
     </>
