@@ -47,7 +47,6 @@ const Constellation = ({ location, speed, colorSeed }) => {
         break;
     }
 
-    // constellationArray[i] = newPosition;
     constellationArray[i] = { location: newPosition, scale: sScale };
   }
 
@@ -60,7 +59,7 @@ const Constellation = ({ location, speed, colorSeed }) => {
           constellationArray[i].location,
           constellationArray[i + 1].location,
         ]}
-        color={0xffffff}
+        color={[0.8, 0.8, 0.8, 0.1]}
         lineWidth={1}
       />
     );
@@ -74,8 +73,8 @@ const Constellation = ({ location, speed, colorSeed }) => {
     // meshRef.current.rotation.y += 0.0001;
     const elapsedTime = clock.getElapsedTime();
     //orbit the location [0,0,0]
-    meshRef.current.position.x = 10 * Math.cos(elapsedTime * speed);
-    meshRef.current.position.z = 10 * Math.sin(elapsedTime * speed);
+    meshRef.current.position.x = 15 * Math.cos(elapsedTime * speed);
+    meshRef.current.position.z = 15 * Math.sin(elapsedTime * speed);
   });
 
   return (

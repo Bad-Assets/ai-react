@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
+import StarFX from "./components/StarFX";
 
 import {
   Bloom,
@@ -31,13 +32,13 @@ function App() {
   const [galaxy, setGalaxy] = useState([]); //parent array for holding all constellations
 
   // Define state variable to track whether a constellation has been generated after a recognition event
-  const [constellationGenerated, setConstellationGenerated] = useState(false);
+  // const [constellationGenerated, setConstellationGenerated] = useState(false);
 
   // link to model provided by Teachable Machine export panel
   // "https://teachablemachine.withgoogle.com/models/smA9m7ak-/"// 3 class model prototype
   // "https://teachablemachine.withgoogle.com/models/bEFuEcfqt/"// janky 4 class model
   // "https://teachablemachine.withgoogle.com/models/I84nEtna1/"// more "stable" 4 class model
-  // "https://teachablemachine.withgoogle.com/models/tNzFMd9l8/"//bottle cap type differentiation model
+  // "https://teachablemachine.withgoogle.com/models/tNzFMd9l8/"//bottle cap type differentiation model(latest)
 
   const URL = "https://teachablemachine.withgoogle.com/models/tNzFMd9l8/";
 
@@ -154,7 +155,7 @@ function App() {
     }
 
     let prediction;
-    let percentile = 0.7;
+    let percentile = 0.9;
 
     if (isIos) {
       prediction = await model.predict(webcamRef.current.webcam);
@@ -163,7 +164,7 @@ function App() {
     }
 
     // Track whether a constellation has been generated for the current prediction
-    let constellationGenerated = false;
+    // let constellationGenerated = false;
 
     for (let i = 0; i < maxPredictions; i++) {
       const classPrediction =
@@ -172,21 +173,12 @@ function App() {
 
       // Check if the probability is above the percentile threshold
       if (parseFloat(prediction[i].probability.toFixed(2)) > percentile) {
-        // Check if a constellation has already been generated
-        if (!constellationGenerated) {
-          // Generate constellation based on the index (i + 1)
-          constellationBirth(i + 1);
-          console.log("generating: ", i + 1);
-          constellationGenerated = true; // Mark that a constellation has been generated
-        }
+        generateConstellation(i + 1);
+        console.log("generating: ", i + 1);
       }
     }
 
-    // Set prediction made to true only if a constellation has been generated
-    if (constellationGenerated) {
-      setPredictionMade(true);
-      setCamState(false); // Turn off the webcam
-    }
+    setCamState(false); // Turn off the webcam
 
     // Reset prediction values after generating constellation
     prediction.forEach((p) => {
@@ -195,59 +187,6 @@ function App() {
 
     setPredictionMade(false);
   }
-
-  // Function to handle screen transitions and calls to the generateConstellation function
-  // Video handling would be done in here as well if/when we decide to implement animations
-  // for constelllation creation
-
-  // Function to handle screen transitions and calls to the generateConstellation function
-  const constellationBirth = (seed) => {
-    if (constellationGenerated) {
-      return; // Exit function early if a constellation has already been made
-    }
-    // console.log("Generated constellation: ", seed);
-
-    switch (seed) {
-      case 1:
-        setTransition("fadeOut");
-        setTimeout(() => {
-          setTransition("fadeIn");
-          generateConstellation(1);
-          // Reset the flag after constellation generation is complete
-          setConstellationGenerated(true);
-        }, 2000);
-        break;
-      case 2:
-        setTransition("fadeOut");
-        setTimeout(() => {
-          setTransition("fadeIn");
-          generateConstellation(2);
-          // Reset the flag after constellation generation is complete
-          setConstellationGenerated(true);
-        }, 2000);
-        break;
-      case 3:
-        setTransition("fadeOut");
-        setTimeout(() => {
-          setTransition("fadeIn");
-          generateConstellation(3);
-          // Reset the flag after constellation generation is complete
-          setConstellationGenerated(true);
-        }, 2000);
-        break;
-      case 4:
-        setTransition("fadeOut");
-        setTimeout(() => {
-          setTransition("fadeIn");
-          generateConstellation(4);
-          // Reset the flag after constellation generation is complete
-          setConstellationGenerated(true);
-        }, 2000);
-        break;
-    }
-
-    setConstellationGenerated(false);
-  };
 
   //pressing the 'p' key will turn the webcam on
   useEffect(() => {
@@ -278,67 +217,91 @@ function App() {
   // For now the seed just controls the random number of stars and the location
   // coordinates a constellation will have, but this function can be tweaked
   // to affect more things about the constellation later
+
+  // Function to handle screen transitions and calls to the generateConstellation function
+  // Video handling would be done in here as well if/when we decide to implement animations
+  // for constelllation creation
   function generateConstellation(seed) {
+    const timeOutSec = 3000;
+    // setConstellationGenerated(true);
+
+    console.log("Generated: ", seed);
     switch (seed) {
       case 1:
-        setGalaxy((prevGalaxy) => [
-          ...prevGalaxy,
-          <Constellation
-            speed={Math.random() * (0.2 - 0.1) - 0.1}
-            key={generateUniqueKey()}
-            colorSeed={1}
-            location={[
-              Math.floor(Math.random() * (20 - 0) - 0),
-              Math.floor(Math.random() * (2 - 0) - 0),
-              Math.floor(Math.random() * (15 - 10) - 10),
-            ]}
-          />,
-        ]);
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={1}
+              location={[
+                Math.floor(Math.random() * (20 - 0) - 0),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (15 - 10) - 10),
+              ]}
+            />,
+          ]);
+        }, timeOutSec);
         break;
       case 2:
-        setGalaxy((prevGalaxy) => [
-          ...prevGalaxy,
-          <Constellation
-            speed={Math.random() * (0.2 - 0.1) - 0.1}
-            key={generateUniqueKey()}
-            colorSeed={2}
-            location={[
-              Math.floor(Math.random() * (20 - 5) - 5),
-              Math.floor(Math.random() * (2 - 0) - 0),
-              Math.floor(Math.random() * (20 - 10) - 10),
-            ]}
-          />,
-        ]);
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={2}
+              location={[
+                Math.floor(Math.random() * (20 - 5) - 5),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (20 - 10) - 10),
+              ]}
+            />,
+          ]);
+        }, timeOutSec);
         break;
       case 3:
-        setGalaxy((prevGalaxy) => [
-          ...prevGalaxy,
-          <Constellation
-            speed={Math.random() * (0.2 - 0.1) - 0.1}
-            key={generateUniqueKey()}
-            colorSeed={3}
-            location={[
-              Math.floor(Math.random() * (20 - 10) - 10),
-              Math.floor(Math.random() * (3 - 0) - 0),
-              Math.floor(Math.random() * (40 - 20) - 20),
-            ]}
-          />,
-        ]);
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={3}
+              location={[
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (3 - 0) - 0),
+                Math.floor(Math.random() * (40 - 20) - 20),
+              ]}
+            />,
+          ]);
+        }, timeOutSec);
         break;
       case 4:
-        setGalaxy((prevGalaxy) => [
-          ...prevGalaxy,
-          <Constellation
-            speed={Math.random() * (0.1 - 0.0) - 0.0}
-            key={generateUniqueKey()}
-            colorSeed={4}
-            location={[
-              Math.floor(Math.random() * (30 - 10) - 10),
-              Math.floor(Math.random() * (3 - 0) - 0),
-              Math.floor(Math.random() * (80 - 40) - 40),
-            ]}
-          />,
-        ]);
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.1 - 0.0) - 0.0}
+              key={generateUniqueKey()}
+              colorSeed={4}
+              location={[
+                Math.floor(Math.random() * (30 - 10) - 10),
+                Math.floor(Math.random() * (3 - 0) - 0),
+                Math.floor(Math.random() * (80 - 40) - 40),
+              ]}
+            />,
+          ]);
+        }, timeOutSec);
         break;
     }
     return;
@@ -353,6 +316,10 @@ function App() {
   function generateUniqueKey() {
     return Math.random().toString(36).substr(2, 9);
   }
+
+  // const testFunc = () => {
+  //   return <StarFX />
+  // }
 
   //Finally we return jsx that contains what the end user will see 👀
   return (
@@ -385,7 +352,7 @@ function App() {
           <OrbitControls
             autoRotate={true}
             enablePan={true}
-            autoRotateSpeed={0.3}
+            autoRotateSpeed={0.1}
           />
           <EffectComposer enabled={true}>
             <Bloom
@@ -419,6 +386,7 @@ function App() {
           />
 
           {galaxy}
+          {/* {testFunc()} */}
         </Canvas>
       </div>
     </>
