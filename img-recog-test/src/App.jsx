@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
-import StarFX from "./components/StarFX";
 
 import {
   Bloom,
@@ -34,8 +33,8 @@ function App() {
   // Define state variable to track whether a constellation has been generated after a recognition event
   // const [constellationGenerated, setConstellationGenerated] = useState(false);
 
-  // link to model provided by Teachable Machine export panel
-  // "https://teachablemachine.withgoogle.com/models/smA9m7ak-/"// 3 class model prototype
+  // link to models provided by Teachable Machine export panel
+  // "https://teachablemachine.withgoogle.com/models/smA9m7ak-/"// 3 class model prototype(phone picture one)
   // "https://teachablemachine.withgoogle.com/models/bEFuEcfqt/"// janky 4 class model
   // "https://teachablemachine.withgoogle.com/models/I84nEtna1/"// more "stable" 4 class model
   // "https://teachablemachine.withgoogle.com/models/tNzFMd9l8/"//bottle cap type differentiation model(latest)
@@ -149,13 +148,15 @@ function App() {
 
   // PREDICT FUNCTION
   // run the webcam image through the image model
+  const [constellationSeed, setConstellationSeed] = useState(0);
+
   async function predict() {
     if (predictionMade) {
       return;
     }
 
     let prediction;
-    let percentile = 0.9;
+    let percentile = 0.5;
 
     if (isIos) {
       prediction = await model.predict(webcamRef.current.webcam);
@@ -163,36 +164,35 @@ function App() {
       prediction = await model.predict(webcamRef.current.canvas);
     }
 
-    // Track whether a constellation has been generated for the current prediction
-    // let constellationGenerated = false;
-
     for (let i = 0; i < maxPredictions; i++) {
       const classPrediction =
         prediction[i].className + ": " + prediction[i].probability.toFixed(2);
       labelContainer.childNodes[i].innerHTML = classPrediction;
 
-      // Check if the probability is above the percentile threshold
       if (parseFloat(prediction[i].probability.toFixed(2)) > percentile) {
-        generateConstellation(i + 1);
-        console.log("generating: ", i + 1);
+        setConstellationSeed(i + 1); // Update the seed
+        setPredictionMade(true); // Indicate prediction made
+        break; // Break the loop after the first prediction above threshold
       }
     }
 
     setCamState(false); // Turn off the webcam
-
-    // Reset prediction values after generating constellation
-    prediction.forEach((p) => {
-      p.probability = 0;
-    });
-
-    setPredictionMade(false);
   }
+
+  // After setting the prediction, generate the constellation
+  useEffect(() => {
+    if (predictionMade) {
+      console.log("Generating constellation: ", constellationSeed);
+      generateConstellation(constellationSeed);
+    }
+  }, [predictionMade]);
 
   //pressing the 'p' key will turn the webcam on
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (e.key === "p") {
         setCamState((prevState) => !prevState);
+        setPredictionMade(false);
       }
     };
 
@@ -223,7 +223,6 @@ function App() {
   // for constelllation creation
   function generateConstellation(seed) {
     const timeOutSec = 3000;
-    // setConstellationGenerated(true);
 
     console.log("Generated: ", seed);
     switch (seed) {
@@ -303,23 +302,21 @@ function App() {
           ]);
         }, timeOutSec);
         break;
+      default:
+        break;
     }
-    return;
   }
 
   // troubleshooting purposes
   useEffect(() => {
-    console.log("Updated galaxy array:", galaxy);
+    console.log("Updated galaxy array: ", galaxy);
+    console.log("Current constellation seed: ", constellationSeed);
   }, [galaxy]);
 
   // Function to generate a unique key. This allows each constellation to have a unique identity
   function generateUniqueKey() {
     return Math.random().toString(36).substr(2, 9);
   }
-
-  // const testFunc = () => {
-  //   return <StarFX />
-  // }
 
   //Finally we return jsx that contains what the end user will see 👀
   return (
@@ -356,7 +353,7 @@ function App() {
           />
           <EffectComposer enabled={true}>
             <Bloom
-              intensity={2.0} // The bloom intensity.
+              intensity={3.0} // The bloom intensity.
               blurPass={undefined} // A blur pass.
               kernelSize={KernelSize.LARGE} // blur kernel size.
               luminanceThreshold={0.9} // luminance threshold. Raise this value to mask out darker elements in the scene.
@@ -386,7 +383,6 @@ function App() {
           />
 
           {galaxy}
-          {/* {testFunc()} */}
         </Canvas>
       </div>
     </>
@@ -397,7 +393,6 @@ export default App;
 
 /**
  * TO DO:
- * Try to find ways to make the connecting lines/overall constellation more appealing or aligned with whatever the group decides on interms of final look
  * Think of further customizations
  * Add some sort of timer to the constellations to make them disappear or something. That OR add "stage hazards" that do things to the stars
  */
