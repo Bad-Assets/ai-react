@@ -318,6 +318,17 @@ function App() {
     return Math.random().toString(36).substr(2, 9);
   }
 
+  function testFunc() {
+    return (
+      <Constellation
+        speed={Math.random() * (0.2 - 0.1) - 0.1}
+        key={generateUniqueKey()}
+        colorSeed={2}
+        location={[0, 0, 0]}
+      />
+    );
+  }
+
   //Finally we return jsx that contains what the end user will see 👀
   return (
     <>
@@ -383,6 +394,7 @@ function App() {
           />
 
           {galaxy}
+          {testFunc()}
         </Canvas>
       </div>
     </>

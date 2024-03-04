@@ -1,12 +1,9 @@
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Instances, Instance } from "@react-three/drei";
+import { ShaderMaterial } from "three";
 
 const StarFX = ({ location, color, starScale }) => {
-//   location = [0, 0, 0];
-//   color = "white";
-//   starScale = 0.5;
-
   const ref = useRef();
 
   const starArray = [];
@@ -40,7 +37,7 @@ const StarFX = ({ location, color, starScale }) => {
   // Return the view, these are regular Threejs elements expressed in JSX
   return (
     <>
-      <mesh position={location} ref={ref} scale={starScale}>
+      <mesh position={location} ref={ref} scale={3}>
         <Instances limit={100} range={100}>
           <sphereGeometry args={[0.02, 128]} />
           <meshStandardMaterial
@@ -48,7 +45,9 @@ const StarFX = ({ location, color, starScale }) => {
             emissiveIntensity={10}
             toneMapped={true}
           />
-          <Instance scale={0.1} position={[0.01, 0.01, 0.01]} />
+          {/* mess with shader glsl stuff before going in here and trying stuff */}
+          {/* <shaderMaterial /> */}
+          <Instance scale={0.1} position={[0.001, 0.001, 0.001]} />
         </Instances>
 
         <Instances limit={10} range={10}>
@@ -58,12 +57,12 @@ const StarFX = ({ location, color, starScale }) => {
             emissiveIntensity={10}
             toneMapped={true}
           />
-          <Instance scale={0.1} position={[0.01, 0.01, 0.01]} />
+          <Instance scale={0.1} position={[0.001, 0.001, 0.001]} />
         </Instances>
         {starArray.map((object, index) => (
           <mesh
             key={index}
-            position={[Math.random() * (0.02 - 0.01) - 0.01, 0.01, 0.01]}
+            position={[0.001, 0.001, 0.001]}
             scale={object.scale}
           >
             <sphereGeometry args={[0.02, 128]} />
