@@ -175,13 +175,17 @@ function App() {
 
     let prediction1;
     let prediction2;
-    let percentile = 0.5;
+    let certaintyThreshold = 0.5;
 
     if (isIos) {
       prediction1 = await model1.predict(webcamRef.current.webcam);
-      prediction2 = await model2.predict(webcamRef.current.webcam);
     } else {
       prediction1 = await model1.predict(webcamRef.current.canvas);
+    }
+
+    if (isIos) {
+      prediction2 = await model2.predict(webcamRef.current.webcam);
+    } else {
       prediction2 = await model2.predict(webcamRef.current.canvas);
     }
 
@@ -190,7 +194,9 @@ function App() {
         prediction2[i].className + ": " + prediction2[i].probability.toFixed(2);
       labelContainer2.childNodes[i].innerHTML = classPrediction2;
 
-      if (parseFloat(prediction2[i].probability.toFixed(2) > percentile)) {
+      if (
+        parseFloat(prediction2[i].probability.toFixed(2)) > certaintyThreshold
+      ) {
         setConstellationSeed2(i + 1);
         break;
       }
@@ -201,7 +207,10 @@ function App() {
         prediction1[i].className + ": " + prediction1[i].probability.toFixed(2);
       labelContainer1.childNodes[i].innerHTML = classPrediction1;
 
-      if (parseFloat(prediction1[i].probability.toFixed(2)) > percentile) {
+      if (
+        parseFloat(prediction1[i].probability.toFixed(2)) >
+        certaintyThreshold + 0.1
+      ) {
         setConstellationSeed(i + 1); // Update the seed
         setPredictionMade(true); // Indicate prediction made
         break; // Break the loop after the first prediction above threshold
@@ -213,7 +222,7 @@ function App() {
     //     prediction1[i].className + ": " + prediction1[i].probability.toFixed(2);
     //   labelContainer1.childNodes[i].innerHTML = classPrediction1;
 
-    //   if (parseFloat(prediction1[i].probability.toFixed(2)) > percentile) {
+    //   if (parseFloat(prediction1[i].probability.toFixed(2)) > certaintyThreshold) {
     //     setConstellationSeed(i + 1); // Update the seed
     //     setPredictionMade(true); // Indicate prediction made
     //     break; // Break the loop after the first prediction above threshold
@@ -233,6 +242,7 @@ function App() {
         constellationSeed2
       );
       generateConstellation(constellationSeed, constellationSeed2);
+      // setPredictionMade(false);
     }
   }, [predictionMade]);
 
@@ -253,11 +263,31 @@ function App() {
   }, []);
 
   // Initialize the webcam when the camState changes
+  // useEffect(() => {
+  //   if (camState) {
+  //     init();
+  //     // setPredictionMade(false);
+  //   } else if (webcamRef.current) {
+  //     webcamRef.current.stop(); // Stop the webcam if it exists
+  //     // setPredictionMade(false);
+  //   }
+  // }, [camState]);
   useEffect(() => {
     if (camState) {
       init();
-    } else if (webcamRef.current) {
-      webcamRef.current.stop(); // Stop the webcam if it exists
+    } else {
+      if (webcamRef.current) {
+        // Cleanup the webcam when camState is false
+        const webcam = webcamRef.current;
+        webcam.stop(); //testing
+        if (webcam.stream) {
+          const tracks = webcam.stream.getTracks();
+          tracks.forEach((track) => {
+            track.stop();
+          });
+        }
+        webcamRef.current = null;
+      }
     }
   }, [camState]);
 
@@ -276,9 +306,45 @@ function App() {
 
     console.log("Generated: ", seed, ", ", seed2);
 
+    //different possible constellation types
     switch ((seed, seed2)) {
+      case (1, 1):
+        console.log("blue, small-sized constellation");
+        break;
+      case (1, 2):
+        console.log("blue, medium-sized constellation");
+        break;
+      case (1, 3):
+        console.log("blue, large-sized constellation");
+        break;
+      case (2, 1):
+        console.log("black, small-sized constellation");
+        break;
+      case (2, 2):
+        console.log("black, medium-sized constellation");
+        break;
+      case (2, 3):
+        console.log("black, large-sized constellation");
+        break;
+      case (3, 1):
+        console.log("green, small-sized constellation");
+        break;
+      case (3, 2):
+        console.log("green, medium-sized constellation");
+        break;
+      case (3, 3):
+        console.log("green, large-sized constellation");
+        break;
+      case (4, 1):
+        console.log("mixed, small-sized constellation");
+        break;
       case (4, 2):
         console.log("mixed, medium-sized constellation");
+        break;
+      case (4, 3):
+        console.log("mixed, large-sized constellation");
+        break;
+      default:
         break;
     }
 
@@ -381,6 +447,7 @@ function App() {
       " ",
       constellationSeed2
     );
+    console.log(predictionMade);
   }, [galaxy]);
 
   // Function to generate a unique key. This allows each constellation to have a unique identity
