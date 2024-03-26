@@ -24,24 +24,29 @@ function App() {
   //WEBCAM AND IMAGE RECOGNITION---------------------------------------------------------
   //
   //
-  const [currentVid, setCurrentVid] = useState("/vidDefault.mp4"); //video states for switching vids
+  const [currentVid, setCurrentVid] = useState("/vid0.mp4"); //video states for switching vids
   const [transition, setTransition] = useState(""); //class state to manage fade in/out transitions via css
   const [camState, setCamState] = useState(false); //webcam state to manage whether webcam is on/off
   const webcamRef = useRef(null); // Reference for webcam object
   const [galaxy, setGalaxy] = useState([]); //parent array for holding all constellations
 
-  // Define state variable to track whether a constellation has been generated after a recognition event
-  // const [constellationGenerated, setConstellationGenerated] = useState(false);
-
   // link to models provided by Teachable Machine export panel
   // "https://teachablemachine.withgoogle.com/models/smA9m7ak-/"// 3 class model prototype(phone picture one)
   // "https://teachablemachine.withgoogle.com/models/bEFuEcfqt/"// janky 4 class model
   // "https://teachablemachine.withgoogle.com/models/I84nEtna1/"// more "stable" 4 class model
-  // "https://teachablemachine.withgoogle.com/models/tNzFMd9l8/"//bottle cap type differentiation model(latest)
+  // "https://teachablemachine.withgoogle.com/models/tNzFMd9l8/"//bottle cap type differentiation model
+  // "https://teachablemachine.withgoogle.com/models/q0vr7pziv/"//color differentiation model(latest)
+  // "https://teachablemachine.withgoogle.com/models/_yIvQ9IlM/"//density/amount recognition model(latest)
 
-  const URL = "https://teachablemachine.withgoogle.com/models/tNzFMd9l8/";
+  const URL1 = "https://teachablemachine.withgoogle.com/models/q0vr7pziv/";
+  const URL2 = "https://teachablemachine.withgoogle.com/models/_yIvQ9IlM/";
 
-  let model, labelContainer, maxPredictions;
+  let model1,
+    model2,
+    labelContainer1,
+    labelContainer2,
+    maxPredictions1,
+    maxPredictions2;
 
   let isIos = false;
   // fix when running demo in ios, video will be frozen;
@@ -66,14 +71,20 @@ function App() {
   //
   async function init() {
     const tmImage = window.tmImage; // Assuming tmImage is available globally
-    const modelURL = URL + "model.json";
-    const metadataURL = URL + "metadata.json";
+
+    const modelURL1 = URL1 + "model.json";
+    const metadataURL1 = URL1 + "metadata.json";
+    const modelURL2 = URL2 + "model.json";
+    const metadataURL2 = URL2 + "metadata.json";
 
     // load the model and metadata
     // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
     // or files from your local hard drive
-    model = await tmImage.load(modelURL, metadataURL);
-    maxPredictions = model.getTotalClasses();
+    model1 = await tmImage.load(modelURL1, metadataURL1);
+    maxPredictions1 = model1.getTotalClasses();
+
+    model2 = await tmImage.load(modelURL2, metadataURL2);
+    maxPredictions2 = model2.getTotalClasses();
 
     // Convenience function to setup a webcam
     const flip = true; // whether to flip the webcam
@@ -94,10 +105,16 @@ function App() {
       document.getElementById("webcam-container").appendChild(webcamObj.canvas);
     }
     // append elements to the DOM
-    labelContainer = document.getElementById("label-container");
-    for (let i = 0; i < maxPredictions; i++) {
+    labelContainer1 = document.getElementById("label-container1");
+    for (let i = 0; i < maxPredictions1; i++) {
       // and class labels
-      labelContainer.appendChild(document.createElement("div"));
+      labelContainer1.appendChild(document.createElement("div"));
+    }
+
+    labelContainer2 = document.getElementById("label-container2");
+    for (let i = 0; i < maxPredictions2; i++) {
+      // and class labels
+      labelContainer2.appendChild(document.createElement("div"));
     }
 
     webcamObj.play();
@@ -149,32 +166,59 @@ function App() {
   // PREDICT FUNCTION
   // run the webcam image through the image model
   const [constellationSeed, setConstellationSeed] = useState(0);
+  const [constellationSeed2, setConstellationSeed2] = useState(0);
 
   async function predict() {
     if (predictionMade) {
       return;
     }
 
-    let prediction;
+    let prediction1;
+    let prediction2;
     let percentile = 0.5;
 
     if (isIos) {
-      prediction = await model.predict(webcamRef.current.webcam);
+      prediction1 = await model1.predict(webcamRef.current.webcam);
+      prediction2 = await model2.predict(webcamRef.current.webcam);
     } else {
-      prediction = await model.predict(webcamRef.current.canvas);
+      prediction1 = await model1.predict(webcamRef.current.canvas);
+      prediction2 = await model2.predict(webcamRef.current.canvas);
     }
 
-    for (let i = 0; i < maxPredictions; i++) {
-      const classPrediction =
-        prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-      labelContainer.childNodes[i].innerHTML = classPrediction;
+    for (let i = 0; i < maxPredictions2; i++) {
+      const classPrediction2 =
+        prediction2[i].className + ": " + prediction2[i].probability.toFixed(2);
+      labelContainer2.childNodes[i].innerHTML = classPrediction2;
 
-      if (parseFloat(prediction[i].probability.toFixed(2)) > percentile) {
+      if (parseFloat(prediction2[i].probability.toFixed(2) > percentile)) {
+        setConstellationSeed2(i + 1);
+        break;
+      }
+    }
+
+    for (let i = 0; i < maxPredictions1; i++) {
+      const classPrediction1 =
+        prediction1[i].className + ": " + prediction1[i].probability.toFixed(2);
+      labelContainer1.childNodes[i].innerHTML = classPrediction1;
+
+      if (parseFloat(prediction1[i].probability.toFixed(2)) > percentile) {
         setConstellationSeed(i + 1); // Update the seed
         setPredictionMade(true); // Indicate prediction made
         break; // Break the loop after the first prediction above threshold
       }
     }
+
+    // for (let i = 0; i < maxPredictions1; i++) {
+    //   const classPrediction1 =
+    //     prediction1[i].className + ": " + prediction1[i].probability.toFixed(2);
+    //   labelContainer1.childNodes[i].innerHTML = classPrediction1;
+
+    //   if (parseFloat(prediction1[i].probability.toFixed(2)) > percentile) {
+    //     setConstellationSeed(i + 1); // Update the seed
+    //     setPredictionMade(true); // Indicate prediction made
+    //     break; // Break the loop after the first prediction above threshold
+    //   }
+    // }
 
     setCamState(false); // Turn off the webcam
   }
@@ -182,8 +226,13 @@ function App() {
   // After setting the prediction, generate the constellation
   useEffect(() => {
     if (predictionMade) {
-      console.log("Generating constellation: ", constellationSeed);
-      generateConstellation(constellationSeed);
+      console.log(
+        "Generating constellation: ",
+        constellationSeed,
+        ", ",
+        constellationSeed2
+      );
+      generateConstellation(constellationSeed, constellationSeed2);
     }
   }, [predictionMade]);
 
@@ -221,10 +270,18 @@ function App() {
   // Function to handle screen transitions and calls to the generateConstellation function
   // Video handling would be done in here as well if/when we decide to implement animations
   // for constelllation creation
-  function generateConstellation(seed) {
+  function generateConstellation(seed, seed2) {
     const timeOutSec = 3000;
+    const lifespan = 120000; //each constellation has a 2 minute lifespan
 
-    console.log("Generated: ", seed);
+    console.log("Generated: ", seed, ", ", seed2);
+
+    switch ((seed, seed2)) {
+      case (4, 2):
+        console.log("mixed, medium-sized constellation");
+        break;
+    }
+
     switch (seed) {
       case 1:
         setTransition("fadeOut");
@@ -241,6 +298,8 @@ function App() {
                 Math.floor(Math.random() * (2 - 0) - 0),
                 Math.floor(Math.random() * (15 - 10) - 10),
               ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
             />,
           ]);
         }, timeOutSec);
@@ -260,6 +319,8 @@ function App() {
                 Math.floor(Math.random() * (2 - 0) - 0),
                 Math.floor(Math.random() * (20 - 10) - 10),
               ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
             />,
           ]);
         }, timeOutSec);
@@ -279,6 +340,8 @@ function App() {
                 Math.floor(Math.random() * (3 - 0) - 0),
                 Math.floor(Math.random() * (40 - 20) - 20),
               ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
             />,
           ]);
         }, timeOutSec);
@@ -298,6 +361,8 @@ function App() {
                 Math.floor(Math.random() * (3 - 0) - 0),
                 Math.floor(Math.random() * (80 - 40) - 40),
               ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
             />,
           ]);
         }, timeOutSec);
@@ -310,7 +375,12 @@ function App() {
   // troubleshooting purposes
   useEffect(() => {
     console.log("Updated galaxy array: ", galaxy);
-    console.log("Current constellation seed: ", constellationSeed);
+    console.log(
+      "Current constellation seeds: ",
+      constellationSeed,
+      " ",
+      constellationSeed2
+    );
   }, [galaxy]);
 
   // Function to generate a unique key. This allows each constellation to have a unique identity
@@ -318,6 +388,7 @@ function App() {
     return Math.random().toString(36).substr(2, 9);
   }
 
+  //function to test what constellations will look like
   function testFunc() {
     return (
       <Constellation
@@ -325,20 +396,41 @@ function App() {
         key={generateUniqueKey()}
         colorSeed={2}
         location={[0, 0, 0]}
+        lifeSpan={5000}
       />
     );
   }
+
+  // useEffect to remove constellations after their lifespan
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setGalaxy((prevGalaxy) =>
+        prevGalaxy.filter((constellation) => {
+          const lifespan = constellation.props.lifeSpan || 0;
+          const creationTime = constellation.props.creationTime || 0;
+          return Date.now() - creationTime <= lifespan;
+        })
+      );
+    }, 5000); // Check every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [galaxy]);
 
   //Finally we return jsx that contains what the end user will see 👀
   return (
     <>
       <div className="bg-black max-w-full h-screen flex">
         <div
-          id="label-container"
+          id="label-container1"
           className="z-[100] text-white/[0.5] absolute w-[10%] h-[10%] bottom-[20%] bg-transparent"
         ></div>
 
-        <div id="webcam-container">
+        <div
+          id="label-container2"
+          className="z-[100] text-white/[0.5] absolute w-[10%] h-[10%] bottom-[40%] bg-transparent"
+        ></div>
+
+        <div id="webcam-container" className={transition}>
           <video
             id="vidContainer"
             src={currentVid}
@@ -383,6 +475,7 @@ function App() {
               ratio={0.85} // Threshold for strong glitches, 0 - no weak glitches, 1 - no strong glitches.
             /> */}
           </EffectComposer>
+          <ambientLight />
           <Stars
             radius={300}
             depth={50}
@@ -394,7 +487,7 @@ function App() {
           />
 
           {galaxy}
-          {testFunc()}
+          {/* {testFunc()} */}
         </Canvas>
       </div>
     </>
@@ -405,6 +498,23 @@ export default App;
 
 /**
  * TO DO:
- * Think of further customizations
- * Add some sort of timer to the constellations to make them disappear or something. That OR add "stage hazards" that do things to the stars
+ * implement 2 model prediction functionality
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  */

@@ -1,11 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Line } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import Star from "./Star";
 
 //A component made up of star components. It handles its own movement independently
 
-const Constellation = ({ location, speed, colorSeed }) => {
+const Constellation = ({
+  location,
+  speed,
+  colorSeed,
+  creationTime,
+  lifeSpan,
+}) => {
   let constellationArray = []; //array to hold star components
   let colors; //variable to store color arrays
   const randomLengths = [
@@ -29,7 +35,7 @@ const Constellation = ({ location, speed, colorSeed }) => {
 
     //maps through inital locations on every loop to add offset to stars AND randomize star scale every loop
     const newPosition = location.map((coord, index) => coord + offset[index]);
-    const sScale = Math.floor(Math.random() * (6 - 3) - 3); //star scale randomizer
+    const sScale = Math.floor(Math.random() * (6 - 4) - 4); //star scale randomizer
 
     //determines colors of individual stars. Right now, it's semi-random/array based
     switch (colorSeed) {

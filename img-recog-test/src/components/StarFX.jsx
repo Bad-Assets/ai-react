@@ -1,80 +1,104 @@
-import React, { useRef } from "react";
+import React, { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Instances, Instance } from "@react-three/drei";
-import { ShaderMaterial } from "three";
+import * as THREE from "three";
+import glsl from "glslify";
+import { MeshDistortMaterial } from "@react-three/drei";
+
+const vertexShader = glsl`
+  varying vec2 vUv;
+  uniform float time;
+  attribute float aOffset;
+
+  void main() {
+    vUv = uv;
+    vec3 newPosition = position;
+
+    // Add random displacement to vertices based on noise
+    newPosition += normalize(position) * (0.02 + 0.01 * sin(time * 1.0));
+
+    // Apply offset to each vertex to create radial particle emission for flames
+    float flameAmplitude = 0.01; // Controls the size of the flames
+    float flameFrequency = 1.0; // Controls the frequency of the flame waves
+    float flameOffset = flameAmplitude * sin(time * flameFrequency + aOffset); // Calculate offset based on time and offset attribute
+    newPosition += normalize(position) * flameOffset;
+
+    // Apply additional offset to create radial particle emission for embers/sparks
+    float emberAmplitude = 0.01; // Controls the size of the embers/sparks
+    float emberFrequency = 20.0; // Controls the frequency of the ember/spark waves
+    float emberOffset = emberAmplitude * sin(time * emberFrequency + aOffset) * 0.1; // Calculate offset based on time and offset attribute
+    newPosition += normalize(position) * emberOffset;
+
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+  }
+`;
+
+const fragmentShader = glsl`
+  varying vec2 vUv;
+  uniform vec3 baseColor;
+  uniform vec3 baseEmissiveColor;
+  uniform float baseEmissiveIntensity;
+
+  void main() {
+    vec2 uv = vUv;
+
+    // Calculate the base emissive effect
+    vec3 baseEmissive = baseEmissiveColor * baseEmissiveIntensity;
+
+    // Calculate the final color by combining the base color with the emissive effect
+    vec3 finalColor = baseColor + baseEmissive;
+
+    // Output final color
+    gl_FragColor = vec4(finalColor, 1.0);
+  }
+`;
 
 const StarFX = ({ location, color, starScale }) => {
   const ref = useRef();
 
-  const starArray = [];
-  const randomLengths = [
-    Math.floor(Math.random() * (8 - 5) + 5),
-    Math.floor(Math.random() * (6 - 3) + 3),
-    Math.floor(Math.random() * (4 - 3) + 3),
-  ];
+  // Generate random offsets for each particle
+  const offsets = useMemo(() => {
+    const array = [];
+    for (let i = 0; i < 1000; i++) {
+      array.push(Math.random() * Math.PI * 2);
+    }
+    return new Float32Array(array);
+  }, []);
 
-  for (
-    let i = 0;
-    i < randomLengths[Math.floor(Math.random() * (2 - 0) + 0)];
-    i++
-  ) {
-    const offset = [
-      Math.random() * (1 - 0) - 0,
-      Math.random() * (2 - 1) - 1,
-      Math.random() * (2 - 1) - 1,
-    ]; //random location offet to make sure that the star comps are more naturally spaced out
+  useFrame(({ clock }) => {
+    ref.current.material.uniforms.time.value = clock.getElapsedTime();
+    ref.current.rotation.x -= 0.01; // Optional: Rotate the star
+  });
 
-    //maps through inital locations on every loop to add offset to stars AND randomize star scale every loop
-    const newPosition = location.map((coord, index) => coord + offset[index]);
-    const sScale = Math.random() * (0.02 - 0.01) - 0.01; //star scale randomizer
-    const speedMult = Math.floor(Math.random() * (3 - 1) - 1);
-    starArray[i] = { location: newPosition, scale: sScale, speed: speedMult };
-  }
-
-  // Add this component to the render-loop, rotate the mesh every frame
-  useFrame((state, delta) => (ref.current.rotation.x -= delta / 5));
-
-  // Return the view, these are regular Threejs elements expressed in JSX
   return (
-    <>
-      <mesh position={location} ref={ref} scale={3}>
-        <Instances limit={100} range={100}>
-          <sphereGeometry args={[0.02, 128]} />
-          <meshStandardMaterial
-            emissive={"white"}
-            emissiveIntensity={10}
-            toneMapped={true}
-          />
-          {/* mess with shader glsl stuff before going in here and trying stuff */}
-          {/* <shaderMaterial /> */}
-          <Instance scale={0.1} position={[0.001, 0.001, 0.001]} />
-        </Instances>
-
-        <Instances limit={10} range={10}>
-          <sphereGeometry args={[0.02, 128]} />
-          <meshStandardMaterial
-            emissive={color}
-            emissiveIntensity={10}
-            toneMapped={true}
-          />
-          <Instance scale={0.1} position={[0.001, 0.001, 0.001]} />
-        </Instances>
-        {starArray.map((object, index) => (
-          <mesh
-            key={index}
-            position={[0.001, 0.001, 0.001]}
-            scale={object.scale}
-          >
-            <sphereGeometry args={[0.02, 128]} />
-            <meshStandardMaterial
-              emissive={color}
-              emissiveIntensity={10}
-              toneMapped={true}
-            />
-          </mesh>
-        ))}
+    <group>
+      <mesh position={[0.01, 0.01, 0.01]} ref={ref} scale={starScale / 2}>
+        <sphereGeometry args={[0.02, 128]} />
+        <shaderMaterial
+          uniforms={{
+            color: { value: new THREE.Color(color) },
+            baseEmissiveColor: { value: new THREE.Color(color) }, // Set base emissive color
+            baseEmissiveIntensity: { value: 10 }, // Set base emissive intensity
+            particleColor: { value: new THREE.Color(color) }, // Set particle color
+            time: { value: 0 },
+          }}
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
+          attributes={{
+            aOffset: { value: offsets },
+          }}
+        />
       </mesh>
-    </>
+      <mesh position={[0.01, 0.01, 0.01]} scale={1}>
+        <sphereGeometry args={[0.02, 128]} />
+        <MeshDistortMaterial
+          distort={3}
+          speed={1}
+          color={"white"}
+          emissive={color}
+          emissiveIntensity={5}
+        />
+      </mesh>
+    </group>
   );
 };
 
