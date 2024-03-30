@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    overflow-y: hidden;
+}
+
+#vidContainer {
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 100%;
+    }
+
+    to {
+        opacity: 0%;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0%;
+    }
+
+    to {
+        opacity: 100%;
+    }
+}
+
+.fadeOut {
+    animation-name: fadeOut;
+    animation-duration: 3s;
+}
+
+.fadeIn {
+    animation-name: fadeIn;
+    animation-duration: 3s;
+}
