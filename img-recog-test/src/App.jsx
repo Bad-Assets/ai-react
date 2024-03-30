@@ -217,18 +217,6 @@ function App() {
       }
     }
 
-    // for (let i = 0; i < maxPredictions1; i++) {
-    //   const classPrediction1 =
-    //     prediction1[i].className + ": " + prediction1[i].probability.toFixed(2);
-    //   labelContainer1.childNodes[i].innerHTML = classPrediction1;
-
-    //   if (parseFloat(prediction1[i].probability.toFixed(2)) > certaintyThreshold) {
-    //     setConstellationSeed(i + 1); // Update the seed
-    //     setPredictionMade(true); // Indicate prediction made
-    //     break; // Break the loop after the first prediction above threshold
-    //   }
-    // }
-
     setCamState(false); // Turn off the webcam
   }
 
@@ -262,16 +250,6 @@ function App() {
     };
   }, []);
 
-  // Initialize the webcam when the camState changes
-  // useEffect(() => {
-  //   if (camState) {
-  //     init();
-  //     // setPredictionMade(false);
-  //   } else if (webcamRef.current) {
-  //     webcamRef.current.stop(); // Stop the webcam if it exists
-  //     // setPredictionMade(false);
-  //   }
-  // }, [camState]);
   useEffect(() => {
     if (camState) {
       init();
@@ -292,14 +270,19 @@ function App() {
   }, [camState]);
 
   //STAR GENERATION-----------------------------------------------------------------------
-  // Generate constellations based on a seed parameter.
+  //
+  // Generate constellations based on a seed parameter
   // For now the seed just controls the random number of stars and the location
   // coordinates a constellation will have, but this function can be tweaked
   // to affect more things about the constellation later
+  //
 
+  //
   // Function to handle screen transitions and calls to the generateConstellation function
   // Video handling would be done in here as well if/when we decide to implement animations
   // for constelllation creation
+  //
+
   function generateConstellation(seed, seed2) {
     const timeOutSec = 3000;
     const lifespan = 120000; //each constellation has a 2 minute lifespan
@@ -360,7 +343,7 @@ function App() {
               key={generateUniqueKey()}
               colorSeed={1}
               location={[
-                Math.floor(Math.random() * (20 - 0) - 0),
+                Math.floor(Math.random() * (20 - 10) - 10),
                 Math.floor(Math.random() * (2 - 0) - 0),
                 Math.floor(Math.random() * (15 - 10) - 10),
               ]}
@@ -381,7 +364,7 @@ function App() {
               key={generateUniqueKey()}
               colorSeed={2}
               location={[
-                Math.floor(Math.random() * (20 - 5) - 5),
+                Math.floor(Math.random() * (20 - 10) - 10),
                 Math.floor(Math.random() * (2 - 0) - 0),
                 Math.floor(Math.random() * (20 - 10) - 10),
               ]}
@@ -483,10 +466,36 @@ function App() {
     return () => clearInterval(interval);
   }, [galaxy]);
 
+  function renderVideo(code) {
+    let finalVid;
+    switch (code) {
+      case 1:
+        finalVid = (
+          <div style={{ width: "100%", height: "100%" }} className={transition}>
+            <video
+              id="vidContainer2"
+              src="/planet1.mp4"
+              style={{
+                opacity: "100%",
+                zIndex: "105",
+              }}
+              autoPlay
+              loop
+            ></video>
+          </div>
+        );
+        break;
+      default:
+        break;
+    }
+    return finalVid;
+  }
+
   //Finally we return jsx that contains what the end user will see 👀
   return (
     <>
-      <div className="bg-black max-w-full h-screen flex">
+      {renderVideo(0)}
+      <div className="bg-black container max-w-full h-screen flex">
         <div
           id="label-container1"
           className="z-[100] text-white/[0.5] absolute w-[10%] h-[10%] bottom-[20%] bg-transparent"
@@ -501,7 +510,7 @@ function App() {
           <video
             id="vidContainer"
             src={currentVid}
-            style={{ opacity: "0%" }}
+            style={{ opacity: "10%", zIndex: -10 }}
             autoPlay
             loop
           ></video>
@@ -513,7 +522,7 @@ function App() {
           style={{
             background: "transparent",
             position: "absolute",
-            zIndex: "500",
+            zIndex: "100",
           }}
         >
           <OrbitControls
