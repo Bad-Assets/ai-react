@@ -29,6 +29,7 @@ function App() {
   const [camState, setCamState] = useState(false); //webcam state to manage whether webcam is on/off
   const webcamRef = useRef(null); // Reference for webcam object
   const [galaxy, setGalaxy] = useState([]); //parent array for holding all constellations
+  const [planetState, setPlanetState] = useState(0);
 
   // link to models provided by Teachable Machine export panel
   // "https://teachablemachine.withgoogle.com/models/smA9m7ak-/"// 3 class model prototype(phone picture one)
@@ -293,39 +294,51 @@ function App() {
     switch ((seed, seed2)) {
       case (1, 1):
         console.log("blue, small-sized constellation");
+        // setPlanetState(1);
         break;
       case (1, 2):
         console.log("blue, medium-sized constellation");
+        // setPlanetState(1);
         break;
       case (1, 3):
         console.log("blue, large-sized constellation");
+        // setPlanetState(1);
         break;
       case (2, 1):
         console.log("black, small-sized constellation");
+        // setPlanetState(2);
         break;
       case (2, 2):
         console.log("black, medium-sized constellation");
+        // setPlanetState(2);
         break;
       case (2, 3):
         console.log("black, large-sized constellation");
+        // setPlanetState(2);
         break;
       case (3, 1):
         console.log("green, small-sized constellation");
+        // setPlanetState(3);
         break;
       case (3, 2):
         console.log("green, medium-sized constellation");
+        // setPlanetState(3);
         break;
       case (3, 3):
         console.log("green, large-sized constellation");
+        // setPlanetState(3);
         break;
       case (4, 1):
         console.log("mixed, small-sized constellation");
+        // setPlanetState(4);
         break;
       case (4, 2):
         console.log("mixed, medium-sized constellation");
+        // setPlanetState(4);
         break;
       case (4, 3):
         console.log("mixed, large-sized constellation");
+        // setPlanetState(4);
         break;
       default:
         break;
@@ -349,6 +362,7 @@ function App() {
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (4 - 2) + 2)}
             />,
           ]);
         }, timeOutSec);
@@ -370,6 +384,7 @@ function App() {
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (6 - 4) + 4)}
             />,
           ]);
         }, timeOutSec);
@@ -391,6 +406,7 @@ function App() {
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (8 - 6) + 6)}
             />,
           ]);
         }, timeOutSec);
@@ -412,6 +428,7 @@ function App() {
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (4 - 2) + 2)}
             />,
           ]);
         }, timeOutSec);
@@ -451,7 +468,7 @@ function App() {
     );
   }
 
-  // useEffect to remove constellations after their lifespan
+  // useEffect to remove constellations after their lifespans
   useEffect(() => {
     const interval = setInterval(() => {
       setGalaxy((prevGalaxy) =>
@@ -467,34 +484,37 @@ function App() {
   }, [galaxy]);
 
   function renderVideo(code) {
-    let finalVid;
+    let source;
+
     switch (code) {
       case 1:
-        finalVid = (
-          <div style={{ width: "100%", height: "100%" }} className={transition}>
-            <video
-              id="vidContainer2"
-              src="/planet1.mp4"
-              style={{
-                opacity: "100%",
-                zIndex: "105",
-              }}
-              autoPlay
-              loop
-            ></video>
-          </div>
-        );
-        break;
+        source = "/planet1.mp4";
       default:
         break;
     }
-    return finalVid;
+
+    return code === 0 ? (
+      ""
+    ) : (
+      <div style={{ width: "100%", height: "100%" }} className={transition}>
+        <video
+          id="vidContainer2"
+          src={source}
+          style={{
+            opacity: "100%",
+            zIndex: "105",
+          }}
+          autoPlay
+          // loop
+        ></video>
+      </div>
+    );
   }
 
   //Finally we return jsx that contains what the end user will see 👀
   return (
     <>
-      {renderVideo(0)}
+      {/* {renderVideo(planetState)} */}
       <div className="bg-black container max-w-full h-screen flex">
         <div
           id="label-container1"
