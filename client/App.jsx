@@ -369,6 +369,7 @@ function App() {
             />,
           ]);
         }, timeOutSec);
+
         break;
       case 2:
         setTransition("fadeOut");
