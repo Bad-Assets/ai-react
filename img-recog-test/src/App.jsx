@@ -284,6 +284,7 @@ function App() {
   // for constelllation creation
   //
 
+  //make calls to server from this function!
   function generateConstellation(seed, seed2) {
     const timeOutSec = 3000;
     const lifespan = 120000; //each constellation has a 2 minute lifespan
@@ -366,6 +367,7 @@ function App() {
             />,
           ]);
         }, timeOutSec);
+        //server call here
         break;
       case 2:
         setTransition("fadeOut");
@@ -469,6 +471,7 @@ function App() {
   }
 
   // useEffect to remove constellations after their lifespans
+  //Make server checks to see if constellations are made already here!
   useEffect(() => {
     const interval = setInterval(() => {
       setGalaxy((prevGalaxy) =>
