@@ -291,52 +291,52 @@ function App() {
     console.log("Generated: ", seed, ", ", seed2);
 
     //different possible constellation types
-    switch ((seed, seed2)) {
-      case (1, 1):
+    switch ([seed, seed2]) {
+      case [1, 1]:
         console.log("blue, small-sized constellation");
         // setPlanetState(1);
         break;
-      case (1, 2):
+      case [1, 2]:
         console.log("blue, medium-sized constellation");
         // setPlanetState(1);
         break;
-      case (1, 3):
+      case [1, 3]:
         console.log("blue, large-sized constellation");
         // setPlanetState(1);
         break;
-      case (2, 1):
+      case [2, 1]:
         console.log("black, small-sized constellation");
         // setPlanetState(2);
         break;
-      case (2, 2):
+      case [2, 2]:
         console.log("black, medium-sized constellation");
         // setPlanetState(2);
         break;
-      case (2, 3):
+      case [2, 3]:
         console.log("black, large-sized constellation");
         // setPlanetState(2);
         break;
-      case (3, 1):
+      case [3, 1]:
         console.log("green, small-sized constellation");
         // setPlanetState(3);
         break;
-      case (3, 2):
+      case [3, 2]:
         console.log("green, medium-sized constellation");
         // setPlanetState(3);
         break;
-      case (3, 3):
+      case [3, 3]:
         console.log("green, large-sized constellation");
         // setPlanetState(3);
         break;
-      case (4, 1):
+      case [4, 1]:
         console.log("mixed, small-sized constellation");
         // setPlanetState(4);
         break;
-      case (4, 2):
+      case [4, 2]:
         console.log("mixed, medium-sized constellation");
         // setPlanetState(4);
         break;
-      case (4, 3):
+      case [4, 3]:
         console.log("mixed, large-sized constellation");
         // setPlanetState(4);
         break;
