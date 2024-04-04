@@ -21,6 +21,10 @@ const ConstellationSchema = new mongoose.Schema({
         type: Array,
         required: true,
     },
+    firstStarCoords: {
+        type: Array,
+        required: true,
+    },
     properties: {
         type: Array,
         required: true,

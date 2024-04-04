@@ -555,7 +555,7 @@ function App() {
           />
 
           {galaxy}
-          {/* {testFunc()} */}
+          {testFunc()}
         </Canvas>
       </div>
     </>
