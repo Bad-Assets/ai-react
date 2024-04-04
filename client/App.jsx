@@ -348,6 +348,7 @@ function App() {
         break;
     }
 
+    //let constData = {}
     switch (seed) {
       case 1:
         setTransition("fadeOut");
@@ -416,6 +417,7 @@ function App() {
       case 4:
         setTransition("fadeOut");
         setTimeout(() => {
+          //store this all in an object with the props inside the constellation then use the obj too push
           setTransition("fadeIn");
           setGalaxy((prevGalaxy) => [
             ...prevGalaxy,
@@ -435,6 +437,7 @@ function App() {
         }, timeOutSec);
         break;
       default:
+        //this should be doing smthng
         break;
     }
   }
