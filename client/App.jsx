@@ -29,6 +29,7 @@ function App() {
   const [camState, setCamState] = useState(false); //webcam state to manage whether webcam is on/off
   const webcamRef = useRef(null); // Reference for webcam object
   const [galaxy, setGalaxy] = useState([]); //parent array for holding all constellations
+  const [planetState, setPlanetState] = useState(0);
 
   // link to models provided by Teachable Machine export panel
   // "https://teachablemachine.withgoogle.com/models/smA9m7ak-/"// 3 class model prototype(phone picture one)
@@ -217,18 +218,6 @@ function App() {
       }
     }
 
-    // for (let i = 0; i < maxPredictions1; i++) {
-    //   const classPrediction1 =
-    //     prediction1[i].className + ": " + prediction1[i].probability.toFixed(2);
-    //   labelContainer1.childNodes[i].innerHTML = classPrediction1;
-
-    //   if (parseFloat(prediction1[i].probability.toFixed(2)) > certaintyThreshold) {
-    //     setConstellationSeed(i + 1); // Update the seed
-    //     setPredictionMade(true); // Indicate prediction made
-    //     break; // Break the loop after the first prediction above threshold
-    //   }
-    // }
-
     setCamState(false); // Turn off the webcam
   }
 
@@ -262,16 +251,6 @@ function App() {
     };
   }, []);
 
-  // Initialize the webcam when the camState changes
-  // useEffect(() => {
-  //   if (camState) {
-  //     init();
-  //     // setPredictionMade(false);
-  //   } else if (webcamRef.current) {
-  //     webcamRef.current.stop(); // Stop the webcam if it exists
-  //     // setPredictionMade(false);
-  //   }
-  // }, [camState]);
   useEffect(() => {
     if (camState) {
       init();
@@ -292,14 +271,20 @@ function App() {
   }, [camState]);
 
   //STAR GENERATION-----------------------------------------------------------------------
-  // Generate constellations based on a seed parameter.
+  //
+  // Generate constellations based on a seed parameter
   // For now the seed just controls the random number of stars and the location
   // coordinates a constellation will have, but this function can be tweaked
   // to affect more things about the constellation later
+  //
 
+  //
   // Function to handle screen transitions and calls to the generateConstellation function
   // Video handling would be done in here as well if/when we decide to implement animations
   // for constelllation creation
+  //
+
+  //make calls to server from this function!
   function generateConstellation(seed, seed2) {
     const timeOutSec = 3000;
     const lifespan = 120000; //each constellation has a 2 minute lifespan
@@ -307,42 +292,54 @@ function App() {
     console.log("Generated: ", seed, ", ", seed2);
 
     //different possible constellation types
-    switch ((seed, seed2)) {
-      case (1, 1):
+    switch ([seed, seed2]) {
+      case [1, 1]:
         console.log("blue, small-sized constellation");
+        // setPlanetState(1);
         break;
-      case (1, 2):
+      case [1, 2]:
         console.log("blue, medium-sized constellation");
+        // setPlanetState(1);
         break;
-      case (1, 3):
+      case [1, 3]:
         console.log("blue, large-sized constellation");
+        // setPlanetState(1);
         break;
-      case (2, 1):
+      case [2, 1]:
         console.log("black, small-sized constellation");
+        // setPlanetState(2);
         break;
-      case (2, 2):
+      case [2, 2]:
         console.log("black, medium-sized constellation");
+        // setPlanetState(2);
         break;
-      case (2, 3):
+      case [2, 3]:
         console.log("black, large-sized constellation");
+        // setPlanetState(2);
         break;
-      case (3, 1):
+      case [3, 1]:
         console.log("green, small-sized constellation");
+        // setPlanetState(3);
         break;
-      case (3, 2):
+      case [3, 2]:
         console.log("green, medium-sized constellation");
+        // setPlanetState(3);
         break;
-      case (3, 3):
+      case [3, 3]:
         console.log("green, large-sized constellation");
+        // setPlanetState(3);
         break;
-      case (4, 1):
+      case [4, 1]:
         console.log("mixed, small-sized constellation");
+        // setPlanetState(4);
         break;
-      case (4, 2):
+      case [4, 2]:
         console.log("mixed, medium-sized constellation");
+        // setPlanetState(4);
         break;
-      case (4, 3):
+      case [4, 3]:
         console.log("mixed, large-sized constellation");
+        // setPlanetState(4);
         break;
       default:
         break;
@@ -361,16 +358,17 @@ function App() {
               key={generateUniqueKey()}
               colorSeed={1}
               location={[
-                Math.floor(Math.random() * (20 - 0) - 0),
+                Math.floor(Math.random() * (20 - 10) - 10),
                 Math.floor(Math.random() * (2 - 0) - 0),
                 Math.floor(Math.random() * (15 - 10) - 10),
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (4 - 2) + 2)}
             />,
           ]);
         }, timeOutSec);
-
+        //server call here
         break;
       case 2:
         setTransition("fadeOut");
@@ -383,12 +381,13 @@ function App() {
               key={generateUniqueKey()}
               colorSeed={2}
               location={[
-                Math.floor(Math.random() * (20 - 5) - 5),
+                Math.floor(Math.random() * (20 - 10) - 10),
                 Math.floor(Math.random() * (2 - 0) - 0),
                 Math.floor(Math.random() * (20 - 10) - 10),
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (6 - 4) + 4)}
             />,
           ]);
         }, timeOutSec);
@@ -410,6 +409,7 @@ function App() {
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (8 - 6) + 6)}
             />,
           ]);
         }, timeOutSec);
@@ -432,6 +432,7 @@ function App() {
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (4 - 2) + 2)}
             />,
           ]);
         }, timeOutSec);
@@ -472,7 +473,8 @@ function App() {
     );
   }
 
-  // useEffect to remove constellations after their lifespan
+  // useEffect to remove constellations after their lifespans
+  //Make server checks to see if constellations are made already here!
   useEffect(() => {
     const interval = setInterval(() => {
       setGalaxy((prevGalaxy) =>
@@ -487,10 +489,39 @@ function App() {
     return () => clearInterval(interval);
   }, [galaxy]);
 
+  function renderVideo(code) {
+    let source;
+
+    switch (code) {
+      case 1:
+        source = "/planet1.mp4";
+      default:
+        break;
+    }
+
+    return code === 0 ? (
+      ""
+    ) : (
+      <div style={{ width: "100%", height: "100%" }} className={transition}>
+        <video
+          id="vidContainer2"
+          src={source}
+          style={{
+            opacity: "100%",
+            zIndex: "105",
+          }}
+          autoPlay
+        // loop
+        ></video>
+      </div>
+    );
+  }
+
   //Finally we return jsx that contains what the end user will see 👀
   return (
     <>
-      <div className="bg-black max-w-full h-screen flex">
+      {/* {renderVideo(planetState)} */}
+      <div className="bg-black container max-w-full h-screen flex">
         <div
           id="label-container1"
           className="z-[100] text-white/[0.5] absolute w-[10%] h-[10%] bottom-[20%] bg-transparent"
@@ -505,7 +536,7 @@ function App() {
           <video
             id="vidContainer"
             src={currentVid}
-            style={{ opacity: "0%" }}
+            style={{ opacity: "10%", zIndex: -10 }}
             autoPlay
             loop
           ></video>
@@ -517,7 +548,7 @@ function App() {
           style={{
             background: "transparent",
             position: "absolute",
-            zIndex: "500",
+            zIndex: "100",
           }}
         >
           <OrbitControls

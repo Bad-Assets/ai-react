@@ -11,6 +11,11 @@ body {
     height: 100%;
 }
 
+#vidContainer2 {
+    width: 100%;
+    height: 100%;
+}
+
 @keyframes fadeOut {
     from {
         opacity: 100%;

@@ -88,7 +88,7 @@ const StarFX = ({ location, color, starScale }) => {
           }}
         />
       </mesh>
-      <mesh position={[0.01, 0.01, 0.01]} scale={1}>
+      <mesh position={[0.01, 0.01, 0.01]} scale={starScale / 2.3}>
         <sphereGeometry args={[0.02, 128]} />
         <MeshDistortMaterial
           distort={3}

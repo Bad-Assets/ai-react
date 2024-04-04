@@ -11,6 +11,7 @@ const Constellation = ({
   colorSeed,
   creationTime,
   lifeSpan,
+  amount
 }) => {
   let constellationArray = []; //array to hold star components
   let colors; //variable to store color arrays
@@ -18,13 +19,13 @@ const Constellation = ({
     Math.floor(Math.random() * (8 - 5) + 5),
     Math.floor(Math.random() * (6 - 3) + 3),
     Math.floor(Math.random() * (4 - 3) + 3),
-  ]; //array to hold different randomly generated array lengths. This randomizes how many stars are in a given constellation
+  ]; //array to hold different randomly generated array lengths. This randomizes how many stars are in a given constellation//outdated. Used for testing
 
   //This loop handles the randomization and initialization of each individual star in a given constellation.
   //if you wanna change any property of an individual star in a constellation, this is where you do it
   for (
     let i = 0;
-    i < randomLengths[Math.floor(Math.random() * (2 - 0) + 0)];
+    i < amount;
     i++
   ) {
     const offset = [
