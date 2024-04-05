@@ -345,7 +345,7 @@ function App() {
         break;
     }
 
-    //let constData = {}
+    //let constData = {} //object to take in the data aboout the constellations
     switch (seed) {
       case 1:
         setTransition("fadeOut");
