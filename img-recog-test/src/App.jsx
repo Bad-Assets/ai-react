@@ -29,7 +29,6 @@ function App() {
   const [camState, setCamState] = useState(false); //webcam state to manage whether webcam is on/off
   const webcamRef = useRef(null); // Reference for webcam object
   const [galaxy, setGalaxy] = useState([]); //parent array for holding all constellations
-  const [planetState, setPlanetState] = useState(0);
 
   // link to models provided by Teachable Machine export panel
   // "https://teachablemachine.withgoogle.com/models/smA9m7ak-/"// 3 class model prototype(phone picture one)
@@ -292,54 +291,42 @@ function App() {
     console.log("Generated: ", seed, ", ", seed2);
 
     //different possible constellation types
-    switch ([seed, seed2]) {
-      case [1, 1]:
+    switch ((seed, seed2)) {
+      case (1, 1):
         console.log("blue, small-sized constellation");
-        // setPlanetState(1);
         break;
-      case [1, 2]:
+      case (1, 2):
         console.log("blue, medium-sized constellation");
-        // setPlanetState(1);
         break;
-      case [1, 3]:
+      case (1, 3):
         console.log("blue, large-sized constellation");
-        // setPlanetState(1);
         break;
-      case [2, 1]:
+      case (2, 1):
         console.log("black, small-sized constellation");
-        // setPlanetState(2);
         break;
-      case [2, 2]:
+      case (2, 2):
         console.log("black, medium-sized constellation");
-        // setPlanetState(2);
         break;
-      case [2, 3]:
+      case (2, 3):
         console.log("black, large-sized constellation");
-        // setPlanetState(2);
         break;
-      case [3, 1]:
+      case (3, 1):
         console.log("green, small-sized constellation");
-        // setPlanetState(3);
         break;
-      case [3, 2]:
+      case (3, 2):
         console.log("green, medium-sized constellation");
-        // setPlanetState(3);
         break;
-      case [3, 3]:
+      case (3, 3):
         console.log("green, large-sized constellation");
-        // setPlanetState(3);
         break;
-      case [4, 1]:
+      case (4, 1):
         console.log("mixed, small-sized constellation");
-        // setPlanetState(4);
         break;
-      case [4, 2]:
+      case (4, 2):
         console.log("mixed, medium-sized constellation");
-        // setPlanetState(4);
         break;
-      case [4, 3]:
+      case (4, 3):
         console.log("mixed, large-sized constellation");
-        // setPlanetState(4);
         break;
       default:
         break;
@@ -359,7 +346,7 @@ function App() {
               location={[
                 Math.floor(Math.random() * (20 - 10) - 10),
                 Math.floor(Math.random() * (2 - 0) - 0),
-                Math.floor(Math.random() * (15 - 10) - 10),
+                Math.floor(Math.random() * (90 - 50) - 50),
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
@@ -382,7 +369,7 @@ function App() {
               location={[
                 Math.floor(Math.random() * (20 - 10) - 10),
                 Math.floor(Math.random() * (2 - 0) - 0),
-                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (90 - 50) - 50),
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
@@ -404,7 +391,7 @@ function App() {
               location={[
                 Math.floor(Math.random() * (20 - 10) - 10),
                 Math.floor(Math.random() * (3 - 0) - 0),
-                Math.floor(Math.random() * (40 - 20) - 20),
+                Math.floor(Math.random() * (90 - 50) - 50),
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
@@ -426,7 +413,7 @@ function App() {
               location={[
                 Math.floor(Math.random() * (30 - 10) - 10),
                 Math.floor(Math.random() * (3 - 0) - 0),
-                Math.floor(Math.random() * (80 - 40) - 40),
+                Math.floor(Math.random() * (90 - 50) - 50),
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
@@ -436,6 +423,26 @@ function App() {
         }, timeOutSec);
         break;
       default:
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.1 - 0.0) - 0.0}
+              key={generateUniqueKey()}
+              colorSeed={Math.floor(Math.random() * (4 - 1) + 1)}
+              location={[
+                Math.floor(Math.random() * (30 - 10) - 10),
+                Math.floor(Math.random() * (3 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (4 - 2) + 2)}
+            />,
+          ]);
+        }, timeOutSec);
         break;
     }
   }
@@ -459,17 +466,29 @@ function App() {
 
   //function to test what constellations will look like
   function testFunc() {
+    let amountArray = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
     return (
-      <Constellation
-        speed={Math.random() * (0.2 - 0.1) - 0.1}
-        key={generateUniqueKey()}
-        colorSeed={2}
-        location={[0, 0, 0]}
-        lifeSpan={5000}
-      />
+      <>
+        {amountArray.map((amount, amountIndex) => (
+          <>
+            <Constellation
+              speed={Math.floor(Math.random() * (0.05 - 0.02) + 0.02)}
+              key={generateUniqueKey()}
+              colorSeed={Math.floor(Math.random() * (4 - 1) + 1)}
+              location={[
+                Math.floor(Math.random() * (500 - 20) + 20),
+                Math.floor(Math.random() * (5 - 1) + 1),
+                100,
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={5000}
+              amount={amount}
+            />
+          </>
+        ))}
+      </>
     );
   }
-
   // useEffect to remove constellations after their lifespans
   //Make server checks to see if constellations are made already here!
   useEffect(() => {
@@ -517,7 +536,6 @@ function App() {
   //Finally we return jsx that contains what the end user will see 👀
   return (
     <>
-      {/* {renderVideo(planetState)} */}
       <div className="bg-black container max-w-full h-screen flex">
         <div
           id="label-container1"
@@ -549,6 +567,7 @@ function App() {
           }}
         >
           <OrbitControls
+            position={[0, 0, 0]}
             autoRotate={true}
             enablePan={true}
             autoRotateSpeed={0.1}
@@ -594,26 +613,3 @@ function App() {
 }
 
 export default App;
-
-/**
- * TO DO:
- * implement 2 model prediction functionality
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
