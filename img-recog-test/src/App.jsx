@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useLoader } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
+import Avocado from './components/Avocado';
 
 import {
   Bloom,
@@ -605,7 +606,7 @@ function App() {
           />
 
           {galaxy}
-          {/* {testFunc()} */}
+          <Avocado />
         </Canvas>
       </div>
     </>
