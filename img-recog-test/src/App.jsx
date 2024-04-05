@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
+// import { SerialPort } from 'serialport'
+
+// create the port
+// const port = new SerialPort({
+//   path: '/dev.tty.usbserial-A603G9G3',
+//   baudRate: 9600,
+// });
 
 import {
   Bloom,
@@ -19,6 +26,22 @@ import {
 import Constellation from "./components/Constellation";
 
 function App() {
+  //
+  //
+  // ARDUINO BUTTON SERIAL COMMUNICATION--------------------------------------------------
+  //
+  //
+  // useEffect(() => {
+  //   const port = new SerialPort("/dev.tty.usbserial-A603G9G3"); // set to the port the Arduino is connected to
+  //   port.on("data", (data) => {
+  //     console.log("Data:", data);
+
+  //     if (data.includes("Button pressed")) {
+  //       // call the function to submit the constellation when the button is pressed
+  //       console.log("Button pressed");
+  //     }
+  //   });
+  // }, []);
   //
   //
   //WEBCAM AND IMAGE RECOGNITION---------------------------------------------------------
@@ -249,10 +272,29 @@ function App() {
   //pressing the 'p' key will turn the webcam on
   useEffect(() => {
     const handleKeyPress = (e) => {
-      if (e.key === "p") {
-        setCamState((prevState) => !prevState);
-        setPredictionMade(false);
-      }
+      // if (e.key === "p") {
+      //   // setCamState((prevState) => !prevState);
+      //   // setPredictionMade(false);
+      //   console.log(`${e.key} pressed`);
+      // }
+
+      // detect the button from the arduino
+      // // create the port
+      // const port = new SerialPort({
+      //   path: '/dev.tty.usbserial-A603G9G3', // set to the port the Arduino is connected to
+      //   baudRate: 9600,
+      // })
+
+      // port.on("data", (data) => {
+      //   console.log("Data:", data);
+
+      //   if (data.includes("Button pressed")) {
+      //     // call the function to submit the constellation when the button is pressed
+      //     console.log("Button pressed!");
+      //     // setCamState((prevState) => !prevState);
+      //     // setPredictionMade(false);
+      //   }
+      // });
     };
 
     window.addEventListener("keypress", handleKeyPress);
@@ -439,16 +481,16 @@ function App() {
   }
 
   // troubleshooting purposes
-  useEffect(() => {
-    console.log("Updated galaxy array: ", galaxy);
-    console.log(
-      "Current constellation seeds: ",
-      constellationSeed,
-      " ",
-      constellationSeed2
-    );
-    console.log(predictionMade);
-  }, [galaxy]);
+  // useEffect(() => {
+  //   console.log("Updated galaxy array: ", galaxy);
+  //   console.log(
+  //     "Current constellation seeds: ",
+  //     constellationSeed,
+  //     " ",
+  //     constellationSeed2
+  //   );
+  //   console.log(predictionMade);
+  // }, [galaxy]);
 
   // Function to generate a unique key. This allows each constellation to have a unique identity
   function generateUniqueKey() {
