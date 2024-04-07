@@ -304,8 +304,8 @@ function App() {
     console.log("Generated: ", seed, ", ", seed2);
 
     //different possible constellation types
-    switch ([seed, seed2]) {
-      case [1, 1]:
+    switch ((seed, seed2)) {
+      case (1, 1):
         console.log("blue, small-sized constellation");
         // setPlanetState(1);
         break;
