@@ -7,7 +7,6 @@ const bodyParser = require('body-parser'); // library to handle POST requests an
 const mongoose = require('mongoose'); // Mongoose is one of the most popular MongoDB libraries for node
 
 // const expressHandlebars = require('express-handlebars');
-const helmet = require('helmet');
 const session = require('express-session');
 
 const router = require('./router.js');
@@ -35,7 +34,6 @@ const app = express();
 // This option tells express to use /assets in a URL path as a static mirror to our client folder
 // Any requests to /assets will map to the client folder to find a file
 // For example going to /assets/img/favicon.png would return the favicon image
-app.use(helmet());
 app.use('/assets', express.static(path.resolve(`${__dirname}/../client/media`)));
 app.use(favicon(`${__dirname}/../client/media/cove-logo.png`));
 app.use(compression());
@@ -50,6 +48,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
 }));
+app.static();
 // app.engine('handlebars', expressHandlebars.engine({ defaultLayout: '' }));
 // app.set('view engine', 'handlebars');
 // app.set('views', `${__dirname}/../views`);
@@ -60,7 +59,3 @@ app.listen(port, (err) => {
   if (err) { throw err; }
   console.log(`Listening on port ${port}`);
 });
-
-// redisClient.connect().then(() => {
-  
-// });

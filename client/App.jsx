@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
 import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
+//import the helper function
+import * as helper from "./helper.js";
 
 // import { generateUniqueName as uniqueName } from "./uniqueName.js";
 
@@ -23,17 +25,11 @@ import Constellation from "./components/Constellation";
 
 function App() {
 
-  ///////////
-  // const config = {
-  //   dictionaries: [adjectives, colors, animals]
-  // }
-
   const generateUniqueName = () => {
     let randomName = uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] });
     console.log(randomName);
     return randomName;
   }
-  /////////////
 
   //
   //
@@ -381,8 +377,20 @@ function App() {
               creationTime={Date.now()}
               lifeSpan={lifespan}
               amount={Math.floor(Math.random() * (4 - 2) + 2)}
-            />,
-          ]);
+            />,]);
+
+          console.log("Galaxy:");
+          console.log(galaxy);
+
+          constData.id = galaxy[galaxy.length - 1].key;
+          constData.name = galaxy[galaxy.length - 1].name;
+          constData.planet = galaxy[galaxy.length - 1].colorSeed;
+          constData.stars = galaxy[galaxy.length - 1].amount;
+          constData.firstStarCoords = galaxy[galaxy.length - 1].location;
+          constData.props = [galaxy[galaxy.length - 1].speed, galaxy[galaxy.length - 1].creationTime, galaxy[galaxy.length - 1].lifeSpan];
+
+          helper.sendPost('/', constData);
+
         }, timeOutSec);
         //server call here
         break;
@@ -406,6 +414,19 @@ function App() {
               amount={Math.floor(Math.random() * (6 - 4) + 4)}
             />,
           ]);
+
+          console.log("Galaxy:");
+          console.log(galaxy);
+
+          constData.id = galaxy[galaxy.length - 1].key;
+          constData.name = galaxy[galaxy.length - 1].name;
+          constData.planet = galaxy[galaxy.length - 1].colorSeed;
+          constData.stars = galaxy[galaxy.length - 1].amount;
+          constData.firstStarCoords = galaxy[galaxy.length - 1].location;
+          constData.props = [galaxy[galaxy.length - 1].speed, galaxy[galaxy.length - 1].creationTime, galaxy[galaxy.length - 1].lifeSpan];
+
+          helper.sendPost(constData);
+
         }, timeOutSec);
         break;
       case 3:
@@ -428,6 +449,19 @@ function App() {
               amount={Math.floor(Math.random() * (8 - 6) + 6)}
             />,
           ]);
+
+          console.log("Galaxy:");
+          console.log(galaxy);
+
+          constData.id = galaxy[galaxy.length - 1].key;
+          constData.name = galaxy[galaxy.length - 1].name;
+          constData.planet = galaxy[galaxy.length - 1].colorSeed;
+          constData.stars = galaxy[galaxy.length - 1].amount;
+          constData.firstStarCoords = galaxy[galaxy.length - 1].location;
+          constData.props = [galaxy[galaxy.length - 1].speed, galaxy[galaxy.length - 1].creationTime, galaxy[galaxy.length - 1].lifeSpan];
+
+          helper.sendPost(constData);
+
         }, timeOutSec);
         break;
       case 4:
@@ -451,6 +485,19 @@ function App() {
               amount={Math.floor(Math.random() * (4 - 2) + 2)}
             />,
           ]);
+
+          console.log("Galaxy:");
+          console.log(galaxy);
+
+          constData.id = galaxy[galaxy.length - 1].key;
+          constData.name = galaxy[galaxy.length - 1].name;
+          constData.planet = galaxy[galaxy.length - 1].colorSeed;
+          constData.stars = galaxy[galaxy.length - 1].amount;
+          constData.firstStarCoords = galaxy[galaxy.length - 1].location;
+          constData.props = [galaxy[galaxy.length - 1].speed, galaxy[galaxy.length - 1].creationTime, galaxy[galaxy.length - 1].lifeSpan];
+
+          helper.sendPost('/', constData);
+
         }, timeOutSec);
         break;
       default:
@@ -536,7 +583,7 @@ function App() {
   //Finally we return jsx that contains what the end user will see 👀
   return (
     <>
-      {/* {renderVideo(planetState)} */}
+      {renderVideo(planetState)}
       <div className="bg-black container max-w-full h-screen flex">
         <div
           id="label-container1"

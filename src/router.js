@@ -5,11 +5,7 @@
 
 const router = (app) => {
     app.get('/', (req, res) => {
-        res.render('home');
-    });
-
-    app.get('/home', (req, res) => {
-        res.render('home');
+        res.render('index.js');
     });
 }
 

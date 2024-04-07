@@ -6,12 +6,14 @@ import Star from "./Star";
 //A component made up of star components. It handles its own movement independently
 
 const Constellation = ({
+  //key?
+  name,
   location,
   speed,
-  colorSeed,
+  colorSeed, //planet
   creationTime,
   lifeSpan,
-  amount
+  amount,
 }) => {
   let constellationArray = []; //array to hold star components
   let colors; //variable to store color arrays
