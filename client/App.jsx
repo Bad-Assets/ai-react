@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
+import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
+
+// import { generateUniqueName as uniqueName } from "./uniqueName.js";
 
 import {
   Bloom,
@@ -19,12 +22,25 @@ import {
 import Constellation from "./components/Constellation";
 
 function App() {
+
+  ///////////
+  // const config = {
+  //   dictionaries: [adjectives, colors, animals]
+  // }
+
+  const generateUniqueName = () => {
+    let randomName = uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] });
+    console.log(randomName);
+    return randomName;
+  }
+  /////////////
+
   //
   //
   //WEBCAM AND IMAGE RECOGNITION---------------------------------------------------------
   //
   //
-  const [currentVid, setCurrentVid] = useState("/vid0.mp4"); //video states for switching vids
+  const [currentVid, setCurrentVid] = useState("/vid0.mp4"); //video states for switching vids // './media/vid0.mp4'
   const [transition, setTransition] = useState(""); //class state to manage fade in/out transitions via css
   const [camState, setCamState] = useState(false); //webcam state to manage whether webcam is on/off
   const webcamRef = useRef(null); // Reference for webcam object
@@ -345,7 +361,7 @@ function App() {
         break;
     }
 
-    //let constData = {} //object to take in the data aboout the constellations
+    let constData = {} //object to take in the data aboout the constellations
     switch (seed) {
       case 1:
         setTransition("fadeOut");
@@ -465,7 +481,7 @@ function App() {
     return (
       <Constellation
         speed={Math.random() * (0.2 - 0.1) - 0.1}
-        key={generateUniqueKey()}
+        key={generateUniqueName()}
         colorSeed={2}
         location={[0, 0, 0]}
         lifeSpan={5000}
@@ -542,20 +558,14 @@ function App() {
           ></video>
         </div>
 
-        <Canvas
-          className={transition}
-          camera={[0, 0, 0]}
-          style={{
-            background: "transparent",
-            position: "absolute",
-            zIndex: "100",
-          }}
+        <Canvas className={transition} camera={[0, 0, 0]} style={{
+          background: "transparent",
+          position: "absolute",
+          zIndex: "100",
+        }}
         >
-          <OrbitControls
-            autoRotate={true}
-            enablePan={true}
-            autoRotateSpeed={0.1}
-          />
+
+          <OrbitControls autoRotate={true} enablePan={true} autoRotateSpeed={0.1} />
           <EffectComposer enabled={true}>
             <Bloom
               intensity={3.0} // The bloom intensity.
