@@ -7,12 +7,12 @@ import Star from "./Star";
 
 const Constellation = ({
   //key?
-  name,
+  // name,
   location,
   speed,
   colorSeed, //planet
-  creationTime,
-  lifeSpan,
+  // creationTime,
+  // lifeSpan,
   amount,
 }) => {
   let constellationArray = []; //array to hold star components
