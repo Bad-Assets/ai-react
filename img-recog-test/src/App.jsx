@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
+import Airtable from 'airtable';
 
 import {
   Bloom,
@@ -69,6 +70,9 @@ function App() {
   // Load the image model and setup the webcam
   //
   //
+
+  const base  = new Airtable({ apiKey: 'patfDwEJuZGFpqDKx.0aedbab77f6c87ce1a448c8a0a7feacf925a5d448dc2f5832a4b135d72bacf0a' }).base('appubl7QMpKAxnY1K');
+
   async function init() {
     const tmImage = window.tmImage; // Assuming tmImage is available globally
 
@@ -121,6 +125,15 @@ function App() {
     webcamRef.current = webcamObj; // Assign webcam object to the useRef
     window.requestAnimationFrame(loop);
   }
+
+  useEffect(() => {
+    base('Constellations')
+    .select({view: 'Grid view'})
+    .eachPage((record, fetchNextPage) => {
+      console.log(record);
+      //setGalaxy(record);
+    })
+  })
   //
   //
   // //
@@ -605,7 +618,7 @@ function App() {
           />
 
           {galaxy}
-          {/* {testFunc()} */}
+          {testFunc()}
         </Canvas>
       </div>
     </>
