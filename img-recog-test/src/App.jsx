@@ -17,7 +17,11 @@ import {
 } from "postprocessing";
 
 import Constellation from "./components/Constellation";
-import FirePlanet from "./components/Planet";
+import FirePlanet from "./components/FirePlanet";
+import FirePlanet2 from "./components/FirePlanet2";
+import RockPlanet from "./components/RockPlanet"
+import IcePlanet from "./components/IcePlanet";
+
 
 function App() {
   //
@@ -607,6 +611,9 @@ function App() {
 
           {galaxy}
           <FirePlanet />
+          <FirePlanet2 />
+          <RockPlanet />
+          <IcePlanet />
           {/* {testFunc()} */}
         </Canvas>
       </div>
