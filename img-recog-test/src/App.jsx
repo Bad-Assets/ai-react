@@ -128,10 +128,34 @@ function App() {
 
   useEffect(() => {
     base('Constellations')
-    .select({view: 'Grid view'})
-    .eachPage((record, fetchNextPage) => {
-      console.log(record);
-      //setGalaxy(record);
+      .select({view: 'Grid view'})
+      .eachPage((record, fetchNextPage) => {
+        // console.log("record.isArray()", record.isArray());
+        console.log(record)
+      //   const initConsts = () => {
+      //     return (
+      //       <>
+      //         {
+      //           record.map((i) => {
+      //             //console.log("i ", i.fields['Star Quantity'])
+      //               <Constellation
+      //                 speed={i.fields.Speed}
+      //                 key={i.fields.Key}
+      //                 colorSeed={i.fields.Colors}
+      //                 location={[
+      //                   Math.floor(Math.random() * (20 - 10) - 10),
+      //                   Math.floor(Math.random() * (2 - 0) - 0),
+      //                   Math.floor(Math.random() * (90 - 50) - 50),
+      //                 ]}
+      //                 creationTime={Date.now()}
+      //                 lifeSpan={lifespan}
+      //                 amount={i.fields['Star Quantity']}
+      //               />
+      //           })
+      //         }
+      //       </>
+      //     )
+      // }
     })
   })
   //
@@ -345,119 +369,91 @@ function App() {
         break;
     }
 
+    let cSpeed, cColorSeed, cLocation, cAmount;
+    let cKey = generateUniqueKey()
     switch (seed) {
       case 1:
-        setTransition("fadeOut");
-        setTimeout(() => {
-          setTransition("fadeIn");
-          setGalaxy((prevGalaxy) => [
-            ...prevGalaxy,
-            <Constellation
-              speed={Math.random() * (0.2 - 0.1) - 0.1}
-              key={generateUniqueKey()}
-              colorSeed={1}
-              location={[
-                Math.floor(Math.random() * (20 - 10) - 10),
-                Math.floor(Math.random() * (2 - 0) - 0),
-                Math.floor(Math.random() * (90 - 50) - 50),
-              ]}
-              creationTime={Date.now()}
-              lifeSpan={lifespan}
-              amount={Math.floor(Math.random() * (4 - 2) + 2)}
-            />,
-          ]);
-        }, timeOutSec);
+        cSpeed = Math.random() * (0.2 - 0.1) - 0.1;
+        cColorSeed = 1; 
+        cLocation = [
+          Math.floor(Math.random() * (20 - 10) - 10),
+          Math.floor(Math.random() * (2 - 0) - 0),
+          Math.floor(Math.random() * (90 - 50) - 50),
+        ];
+        cAmount = Math.floor(Math.random() * (4 - 2) + 2);
         //server call here
         break;
       case 2:
-        setTransition("fadeOut");
-        setTimeout(() => {
-          setTransition("fadeIn");
-          setGalaxy((prevGalaxy) => [
-            ...prevGalaxy,
-            <Constellation
-              speed={Math.random() * (0.2 - 0.1) - 0.1}
-              key={generateUniqueKey()}
-              colorSeed={2}
-              location={[
-                Math.floor(Math.random() * (20 - 10) - 10),
-                Math.floor(Math.random() * (2 - 0) - 0),
-                Math.floor(Math.random() * (90 - 50) - 50),
-              ]}
-              creationTime={Date.now()}
-              lifeSpan={lifespan}
-              amount={Math.floor(Math.random() * (6 - 4) + 4)}
-            />,
-          ]);
-        }, timeOutSec);
+        cSpeed = Math.random() * (0.2 - 0.1) - 0.1;
+        cColorSeed = 2; 
+        cLocation = [
+          Math.floor(Math.random() * (20 - 10) - 10),
+          Math.floor(Math.random() * (2 - 0) - 0),
+          Math.floor(Math.random() * (90 - 50) - 50),
+        ];
+        cAmount = Math.floor(Math.random() * (6 - 4) + 4);
         break;
       case 3:
-        setTransition("fadeOut");
-        setTimeout(() => {
-          setTransition("fadeIn");
-          setGalaxy((prevGalaxy) => [
-            ...prevGalaxy,
-            <Constellation
-              speed={Math.random() * (0.2 - 0.1) - 0.1}
-              key={generateUniqueKey()}
-              colorSeed={3}
-              location={[
-                Math.floor(Math.random() * (20 - 10) - 10),
-                Math.floor(Math.random() * (3 - 0) - 0),
-                Math.floor(Math.random() * (90 - 50) - 50),
-              ]}
-              creationTime={Date.now()}
-              lifeSpan={lifespan}
-              amount={Math.floor(Math.random() * (8 - 6) + 6)}
-            />,
-          ]);
-        }, timeOutSec);
+        cSpeed = Math.random() * (0.2 - 0.1) - 0.1;
+        cColorSeed = 3; 
+        cLocation = [
+          Math.floor(Math.random() * (20 - 10) - 10),
+          Math.floor(Math.random() * (2 - 0) - 0),
+          Math.floor(Math.random() * (90 - 50) - 50),
+        ];
+        cAmount = Math.floor(Math.random() * (8 - 6) + 6);
         break;
       case 4:
-        setTransition("fadeOut");
-        setTimeout(() => {
-          setTransition("fadeIn");
-          setGalaxy((prevGalaxy) => [
-            ...prevGalaxy,
-            <Constellation
-              speed={Math.random() * (0.1 - 0.0) - 0.0}
-              key={generateUniqueKey()}
-              colorSeed={4}
-              location={[
-                Math.floor(Math.random() * (30 - 10) - 10),
-                Math.floor(Math.random() * (3 - 0) - 0),
-                Math.floor(Math.random() * (90 - 50) - 50),
-              ]}
-              creationTime={Date.now()}
-              lifeSpan={lifespan}
-              amount={Math.floor(Math.random() * (4 - 2) + 2)}
-            />,
-          ]);
-        }, timeOutSec);
+        cSpeed = Math.random() * (0.1 - 0.0) - 0.0;
+        cColorSeed = 4; 
+        cLocation = [
+          Math.floor(Math.random() * (30 - 10) - 10),
+          Math.floor(Math.random() * (3 - 0) - 0),
+          Math.floor(Math.random() * (90 - 50) - 50),
+        ];
+        cAmount = Math.floor(Math.random() * (4 - 2) + 2);
         break;
       default:
-        setTransition("fadeOut");
-        setTimeout(() => {
-          setTransition("fadeIn");
-          setGalaxy((prevGalaxy) => [
-            ...prevGalaxy,
-            <Constellation
-              speed={Math.random() * (0.1 - 0.0) - 0.0}
-              key={generateUniqueKey()}
-              colorSeed={Math.floor(Math.random() * (4 - 1) + 1)}
-              location={[
-                Math.floor(Math.random() * (30 - 10) - 10),
-                Math.floor(Math.random() * (3 - 0) - 0),
-                Math.floor(Math.random() * (90 - 50) - 50),
-              ]}
-              creationTime={Date.now()}
-              lifeSpan={lifespan}
-              amount={Math.floor(Math.random() * (4 - 2) + 2)}
-            />,
-          ]);
-        }, timeOutSec);
+        cSpeed = Math.random() * (0.1 - 0.0) - 0.0;
+        cColorSeed = Math.floor(Math.random() * (4 - 1) + 1); 
+        cLocation = [
+          Math.floor(Math.random() * (30 - 10) - 10),
+          Math.floor(Math.random() * (3 - 0) - 0),
+          Math.floor(Math.random() * (90 - 50) - 50),
+        ];
+        cAmount = Math.floor(Math.random() * (4 - 2) + 2);
         break;
     }
+
+    setTransition("fadeOut");
+    setTimeout(() => {
+      setTransition("fadeIn");
+      setGalaxy((prevGalaxy) => [
+        ...prevGalaxy,
+        <Constellation
+          speed={cSpeed}
+          key={cKey}
+          colorSeed={cColorSeed}
+          location={cLocation}
+          creationTime={Date.now()}
+          lifeSpan={lifespan}
+          amount={cAmount}
+        />,
+      ]);
+    }, timeOutSec);
+
+    //add new constellation into database
+    base('Constellations').create({
+      Speed: 0.4,
+      Key: 'sally',
+      'Initial Coordinate': '[5, 9, 8]',
+      Colors: '3',
+      'Star Quantity': 3
+    }).then(record => {
+      console.log('Created record:', record);
+    }).catch(err => {
+      console.error('Error creating record:', err);
+    });
   }
 
   // troubleshooting purposes
@@ -480,6 +476,21 @@ function App() {
   //function to test what constellations will look like
   function testFunc() {
     let amountArray = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
+
+    base('Constellations').create({
+      Speed: 0.4,
+      Key: 'sally',
+      x: 3,
+      y: 2,
+      z: 5,
+      Colors: '3',
+      'Star Quantity': 3
+    }).then(record => {
+      console.log('Created record:', record);
+    }).catch(err => {
+      console.error('Error creating record:', err);
+    });
+
     return (
       <>
         {amountArray.map((amount, amountIndex) => (
@@ -616,8 +627,8 @@ function App() {
             fade
             speed={0.5}
           />
-
           {galaxy}
+          {/* {initConsts} */}
           {testFunc()}
         </Canvas>
       </div>
