@@ -5,6 +5,7 @@ const compression = require('compression'); // compression library to gzip respo
 const favicon = require('serve-favicon'); // favicon library to handle favicon requests
 const bodyParser = require('body-parser'); // library to handle POST requests any information sent in an HTTP body
 const mongoose = require('mongoose'); // Mongoose is one of the most popular MongoDB libraries for node
+const http = require('http'); // http is a built-in node library to handle http traffic
 
 // const expressHandlebars = require('express-handlebars');
 const session = require('express-session');
@@ -29,6 +30,8 @@ mongoose.connect(dbURI).catch((err) => {
 });
 
 const app = express();
+http.createServer(app);
+const io = require('socket.io')(http);
 
 // app.use tells express to use different options
 // This option tells express to use /assets in a URL path as a static mirror to our client folder
@@ -41,17 +44,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(session({
   key: 'sessionid',
-  // store: new RedisStore({
-  //   client: redisClient,
-  // }),
   secret: 'Constellation Cove',
   resave: false,
   saveUninitialized: false,
 }));
 app.static();
-// app.engine('handlebars', expressHandlebars.engine({ defaultLayout: '' }));
-// app.set('view engine', 'handlebars');
-// app.set('views', `${__dirname}/../views`);
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+});
 
 router(app);
 

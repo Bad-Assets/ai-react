@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
 import * as helper from "./helper.js";
-
+// import { sendPost, generateUniqueKey, generateUniqueName } from "./helper.js";
 import {
   Bloom,
   EffectComposer,
@@ -18,6 +18,9 @@ import {
 } from "postprocessing";
 
 import Constellation from "./components/Constellation";
+import io from "socket.io-client";
+
+const socket = io();
 
 function App() {
   //
@@ -31,6 +34,8 @@ function App() {
   const webcamRef = useRef(null); // Reference for webcam object
   const [galaxy, setGalaxy] = useState([]); //parent array for holding all constellations
   const [planetState, setPlanetState] = useState([]);
+
+  let constData = {} //object to take in the data aboout the constellations
 
   // link to models provided by Teachable Machine export panel
   // "https://teachablemachine.withgoogle.com/models/smA9m7ak-/"// 3 class model prototype(phone picture one)
@@ -147,6 +152,10 @@ function App() {
       webcamRef.current.update(); // update the webcam frame
       await predict();
     }
+
+    socket.on('newConstellationMade', (constellation) => {
+      setGalaxy((prevGalaxy) => [...prevGalaxy, constellation]);
+    });
   }
 
   // Use useEffect to start the loop
@@ -240,6 +249,7 @@ function App() {
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (e.key === "p") {
+        console.log("Key pressed: ", e.key);
         setCamState((prevState) => !prevState);
         setPredictionMade(false);
       }
@@ -334,7 +344,6 @@ function App() {
         break;
     }
 
-    let constData = {} //object to take in the data aboout the constellations
     switch (seed) {
       case 1:
         setTransition("fadeOut");
@@ -366,7 +375,9 @@ function App() {
           constData.firstStarCoords = galaxy[galaxy.length - 1].location;
           constData.props = [galaxy[galaxy.length - 1].speed, galaxy[galaxy.length - 1].creationTime, galaxy[galaxy.length - 1].lifeSpan];
 
-          // helper.sendPost('/makeConstellation', constData);
+          helper.sendPost('/makeConstellation', constData);
+          // sendPost('/makeConstellation', constData);
+
 
         }, timeOutSec);
         //server call here
@@ -402,7 +413,7 @@ function App() {
           constData.firstStarCoords = galaxy[galaxy.length - 1].location;
           constData.props = [galaxy[galaxy.length - 1].speed, galaxy[galaxy.length - 1].creationTime, galaxy[galaxy.length - 1].lifeSpan];
 
-          // helper.sendPost('/makeConstellation', constData);
+          helper.sendPost('/makeConstellation', constData);
 
         }, timeOutSec);
         break;
@@ -437,7 +448,7 @@ function App() {
           constData.firstStarCoords = galaxy[galaxy.length - 1].location;
           constData.props = [galaxy[galaxy.length - 1].speed, galaxy[galaxy.length - 1].creationTime, galaxy[galaxy.length - 1].lifeSpan];
 
-          // helper.sendPost('/makeConstellation', constData);
+          helper.sendPost('/makeConstellation', constData);
 
         }, timeOutSec);
         break;
@@ -473,7 +484,7 @@ function App() {
           constData.firstStarCoords = galaxy[galaxy.length - 1].location;
           constData.props = [galaxy[galaxy.length - 1].speed, galaxy[galaxy.length - 1].creationTime, galaxy[galaxy.length - 1].lifeSpan];
 
-          // helper.sendPost('/makeConstellation', constData);
+          helper.sendPost('/makeConstellation', constData);
 
         }, timeOutSec);
         break;
@@ -508,7 +519,7 @@ function App() {
           constData.firstStarCoords = galaxy[galaxy.length - 1].location;
           constData.props = [galaxy[galaxy.length - 1].speed, galaxy[galaxy.length - 1].creationTime, galaxy[galaxy.length - 1].lifeSpan];
 
-          // helper.sendPost('/makeConstellation', constData);
+          helper.sendPost('/makeConstellation', constData);
 
         }, timeOutSec);
         break;
@@ -669,5 +680,5 @@ function App() {
     </>
   );
 }
-
 export default App;
+// export { App };
