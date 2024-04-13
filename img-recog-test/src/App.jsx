@@ -808,34 +808,6 @@ function App() {
     return () => clearInterval(interval);
   }, [galaxy]);
 
-  function renderVideo(code) {
-    let source;
-
-    switch (code) {
-      case 1:
-        source = "/planet1.mp4";
-      default:
-        break;
-    }
-
-    return code === 0 ? (
-      ""
-    ) : (
-      <div style={{ width: "100%", height: "100%" }} className={transition}>
-        <video
-          id="vidContainer2"
-          src={source}
-          style={{
-            opacity: "100%",
-            zIndex: "105",
-          }}
-          autoPlay
-          // loop
-        ></video>
-      </div>
-    );
-  }
-
   //Finally we return jsx that contains what the end user will see 👀
   return (
     <>
