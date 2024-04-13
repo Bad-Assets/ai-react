@@ -11,7 +11,7 @@ const Constellation = ({
   colorSeed,
   creationTime,
   lifeSpan,
-  amount
+  amount,
 }) => {
   let constellationArray = []; //array to hold star components
   let colors; //variable to store color arrays
@@ -23,11 +23,7 @@ const Constellation = ({
 
   //This loop handles the randomization and initialization of each individual star in a given constellation.
   //if you wanna change any property of an individual star in a constellation, this is where you do it
-  for (
-    let i = 0;
-    i < amount;
-    i++
-  ) {
+  for (let i = 0; i < amount; i++) {
     const offset = [
       Math.random() * (8 - 3) - 3,
       Math.random() * (6 - 4) - 4,
@@ -41,16 +37,36 @@ const Constellation = ({
     //determines colors of individual stars. Right now, it's semi-random/array based
     switch (colorSeed) {
       case 1:
-        colors = ["lightBlue", "cyan", "aquamarine"];
-        break;
-      case 2:
-        colors = ["pink", "beige", "salmon"];
-        break;
-      case 3:
         colors = ["violet", "mediumVioletRed", "plum"];
         break;
+      case 2:
+        colors = ["lightBlue", "cyan", "aquamarine"];
+        break;
+      case 3:
+        colors = ["pink", "beige", "salmon"];
+        break;
       case 4:
-        colors = ["limeGreen", "greenYellow", "green"];
+        colors = ["yellow", "neonYellow", "vanilla"];
+        break;
+      case 5:
+        colors = ["white"];
+        break;
+      case 6:
+        colors = [
+          "violet",
+          "mediumVioletRed",
+          "plum",
+          "lightBlue",
+          "cyan",
+          "aquamarine",
+          "pink",
+          "beige",
+          "salmon",
+          "yellow",
+          "neonYellow",
+          "vanilla",
+          "white",
+        ];
         break;
     }
 

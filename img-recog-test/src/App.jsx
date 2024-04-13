@@ -36,10 +36,12 @@ function App() {
   // "https://teachablemachine.withgoogle.com/models/I84nEtna1/"// more "stable" 4 class model
   // "https://teachablemachine.withgoogle.com/models/tNzFMd9l8/"//bottle cap type differentiation model
   // "https://teachablemachine.withgoogle.com/models/q0vr7pziv/"//color differentiation model(latest)
-  // "https://teachablemachine.withgoogle.com/models/_yIvQ9IlM/"//density/amount recognition model(latest)
+  // "https://teachablemachine.withgoogle.com/models/_yIvQ9IlM/"//density/amount recognition model
+  // "https://teachablemachine.withgoogle.com/models/USVsSfUW0/"//density model(latest)
+  // "https://teachablemachine.withgoogle.com/models/4XaCi5aqF/"//color(latest)
 
-  const URL1 = "https://teachablemachine.withgoogle.com/models/q0vr7pziv/";
-  const URL2 = "https://teachablemachine.withgoogle.com/models/_yIvQ9IlM/";
+  const URL1 = "https://teachablemachine.withgoogle.com/models/4XaCi5aqF/"; //color
+  const URL2 = "https://teachablemachine.withgoogle.com/models/USVsSfUW0/"; //density
 
   let model1,
     model2,
@@ -410,6 +412,50 @@ function App() {
               speed={Math.random() * (0.1 - 0.0) - 0.0}
               key={generateUniqueKey()}
               colorSeed={4}
+              location={[
+                Math.floor(Math.random() * (30 - 10) - 10),
+                Math.floor(Math.random() * (3 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (4 - 2) + 2)}
+            />,
+          ]);
+        }, timeOutSec);
+        break;
+      case 5:
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.1 - 0.0) - 0.0}
+              key={generateUniqueKey()}
+              colorSeed={5}
+              location={[
+                Math.floor(Math.random() * (30 - 10) - 10),
+                Math.floor(Math.random() * (3 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (4 - 2) + 2)}
+            />,
+          ]);
+        }, timeOutSec);
+        break;
+      case 6:
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.1 - 0.0) - 0.0}
+              key={generateUniqueKey()}
+              colorSeed={6}
               location={[
                 Math.floor(Math.random() * (30 - 10) - 10),
                 Math.floor(Math.random() * (3 - 0) - 0),
