@@ -30,8 +30,9 @@ mongoose.connect(dbURI).catch((err) => {
 });
 
 const app = express();
-http.createServer(app);
-const io = require('socket.io')(http);
+
+http.createServer(app); //create an http server for socket.io to use. Will still work over the express server
+const socket = require('socket.io')(http);
 
 // app.use tells express to use different options
 // This option tells express to use /assets in a URL path as a static mirror to our client folder
@@ -50,11 +51,7 @@ app.use(session({
 }));
 app.static();
 
-io.on('connection', (socket) => {
-  console.log('a user connected');
-});
-
-router(app);
+router(app, socket);
 
 app.listen(port, (err) => {
   if (err) { throw err; }

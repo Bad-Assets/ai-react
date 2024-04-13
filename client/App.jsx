@@ -20,7 +20,7 @@ import {
 import Constellation from "./components/Constellation";
 import io from "socket.io-client";
 
-const socket = io();
+const socket = io(); //listen on the same port as the frontend
 
 function App() {
   //
@@ -153,9 +153,6 @@ function App() {
       await predict();
     }
 
-    socket.on('newConstellationMade', (constellation) => {
-      setGalaxy((prevGalaxy) => [...prevGalaxy, constellation]);
-    });
   }
 
   // Use useEffect to start the loop
@@ -168,9 +165,15 @@ function App() {
     if (camState) {
       animate();
     }
+
+    socket.on('newConstellationMade', (constellation) => {
+      setGalaxy((prevGalaxy) => [...prevGalaxy, constellation]);
+    });
+
     // Cleanup function to stop the loop when camState is false
     return () => {
       window.cancelAnimationFrame(frameId);
+      socket.disconnect();
     };
   }, [camState, predictionMade]);
 

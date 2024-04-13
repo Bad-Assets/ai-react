@@ -4,20 +4,20 @@
  */
 const { Constellation } = require("../client/components/Constellation");
 // import * as Constellation from "../client/components/Constellation";
-import * as io from "socket.io";
-const socket = io();
+import io from "socket.io";
 
-const router = (app) => {
+const router = (app, socket) => {
+
     app.get('/', (req, res) => {
         res.sendFile(__dirname + '/index.html');
     });
 
     app.post('/makeConstellation', (req, res) => {
-        makeConstellation(req, res);
+        makeConstellation(req, res, socket);
     });
 }
 
-const makeConstellation = async (req, res) => {
+const makeConstellation = async (req, res, socket) => {
     try {
         const newConstellation = new Constellation({
             id: req.body.id,
