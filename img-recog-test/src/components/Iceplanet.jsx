@@ -10,7 +10,7 @@ import { useFrame } from "@react-three/fiber";
 
 export default function IcePlanet(props) {
   const groupRef = useRef()
-  const { nodes, materials } = useGLTF('/public/iceplanet.glb')
+  const { nodes, materials } = useGLTF('/iceplanet.glb')
 
   useFrame(({ clock }) => {
     // Rotate the mesh around the Y axis

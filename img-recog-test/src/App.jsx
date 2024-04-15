@@ -17,10 +17,12 @@ import {
 } from "postprocessing";
 
 import Constellation from "./components/Constellation";
-import FirePlanet from "./components/FirePlanet";
-import FirePlanet2 from "./components/FirePlanet2";
-import RockPlanet from "./components/RockPlanet"
+import FirePlanet from "./components/FireplanetFINAL";
+import RockPlanet from "./components/RockPlanet";
+import PurpleRockPlanet from "./components/Purplerockplanet";
 import IcePlanet from "./components/IcePlanet";
+import GasGiant from "./components/Gasgiant";
+
 
 
 function App() {
@@ -611,8 +613,8 @@ function App() {
 
           {galaxy}
           <FirePlanet />
-          <FirePlanet2 />
-          <RockPlanet />
+          <PurpleRockPlanet />
+          <GasGiant />
           <IcePlanet />
           {/* {testFunc()} */}
         </Canvas>
