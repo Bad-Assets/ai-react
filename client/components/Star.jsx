@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import StarFX from "./StarFX";
+import StarFX from "./StarFX.jsx";
 
 const Star = ({ location, color, starScale }) => {
   const ref = useRef();

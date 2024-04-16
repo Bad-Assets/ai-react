@@ -19,4 +19,6 @@ const sendPost = async (url, data, handler) => {
 };
 
 
-export default sendPost;
+module.exports = {
+    sendPost,
+}

@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
-import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
-//import the helper function
-import * as helper from "./helper.js";
 
-// import { generateUniqueName as uniqueName } from "./uniqueName.js";
+import io from "socket.io-client";
+
+const socket = io();
 
 import {
   Bloom,
@@ -21,27 +20,19 @@ import {
   GlitchMode,
 } from "postprocessing";
 
-import Constellation from "./components/Constellation";
+import Constellation from "./components/Constellation.jsx";
 
 function App() {
-
-  const generateUniqueName = () => {
-    let randomName = uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] });
-    console.log(randomName);
-    return randomName;
-  }
-
   //
   //
   //WEBCAM AND IMAGE RECOGNITION---------------------------------------------------------
   //
   //
-  const [currentVid, setCurrentVid] = useState("/vid0.mp4"); //video states for switching vids // './media/vid0.mp4'
+  const [currentVid, setCurrentVid] = useState("/assets/media/vid0.mp4"); //video states for switching vids
   const [transition, setTransition] = useState(""); //class state to manage fade in/out transitions via css
   const [camState, setCamState] = useState(false); //webcam state to manage whether webcam is on/off
   const webcamRef = useRef(null); // Reference for webcam object
   const [galaxy, setGalaxy] = useState([]); //parent array for holding all constellations
-  const [planetState, setPlanetState] = useState(0);
 
   // link to models provided by Teachable Machine export panel
   // "https://teachablemachine.withgoogle.com/models/smA9m7ak-/"// 3 class model prototype(phone picture one)
@@ -49,10 +40,12 @@ function App() {
   // "https://teachablemachine.withgoogle.com/models/I84nEtna1/"// more "stable" 4 class model
   // "https://teachablemachine.withgoogle.com/models/tNzFMd9l8/"//bottle cap type differentiation model
   // "https://teachablemachine.withgoogle.com/models/q0vr7pziv/"//color differentiation model(latest)
-  // "https://teachablemachine.withgoogle.com/models/_yIvQ9IlM/"//density/amount recognition model(latest)
+  // "https://teachablemachine.withgoogle.com/models/_yIvQ9IlM/"//density/amount recognition model
+  // "https://teachablemachine.withgoogle.com/models/USVsSfUW0/"//density model(latest)
+  // "https://teachablemachine.withgoogle.com/models/4XaCi5aqF/"//color(latest)
 
-  const URL1 = "https://teachablemachine.withgoogle.com/models/q0vr7pziv/";
-  const URL2 = "https://teachablemachine.withgoogle.com/models/_yIvQ9IlM/";
+  const URL1 = "https://teachablemachine.withgoogle.com/models/4XaCi5aqF/"; //color
+  const URL2 = "https://teachablemachine.withgoogle.com/models/USVsSfUW0/"; //density
 
   let model1,
     model2,
@@ -170,9 +163,15 @@ function App() {
     if (camState) {
       animate();
     }
+
+    socket.on('newConstellationMade', (constellation) => {
+      setGalaxy((prevGalaxy) => [...prevGalaxy, constellation]);
+    });
+
     // Cleanup function to stop the loop when camState is false
     return () => {
       window.cancelAnimationFrame(frameId);
+      socket.disconnect();
     };
   }, [camState, predictionMade]);
 
@@ -188,7 +187,7 @@ function App() {
 
     let prediction1;
     let prediction2;
-    let certaintyThreshold = 0.5;
+    let certaintyThreshold = 0.6;
 
     if (isIos) {
       prediction1 = await model1.predict(webcamRef.current.webcam);
@@ -249,18 +248,28 @@ function App() {
 
   //pressing the 'p' key will turn the webcam on
   useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (e.key === "p") {
-        setCamState((prevState) => !prevState);
-        setPredictionMade(false);
-      }
-    };
+    // const handleKeyPress = (e) => {
+    //   if (e.key === "p") {
+    //     // setCamState((prevState) => !prevState);
+    //     // setPredictionMade(false);
+    //     testFunc();
+    //     console.log("Make constellation");
+    //   }
+    // };
 
-    window.addEventListener("keypress", handleKeyPress);
+    // window.addEventListener("keypress", handleKeyPress);
+
+    // return () => {
+    //   window.removeEventListener("keypress", handleKeyPress);
+    // };
+    socket.on('buttonPressed', () => {
+      console.log("Button pressed! Make Constellation");
+      testFunc();
+    }); 
 
     return () => {
-      window.removeEventListener("keypress", handleKeyPress);
-    };
+      socket.disconnect();
+    }
   }, []);
 
   useEffect(() => {
@@ -302,64 +311,14 @@ function App() {
     const lifespan = 120000; //each constellation has a 2 minute lifespan
 
     console.log("Generated: ", seed, ", ", seed2);
+    let constellationMap = "";
 
     //different possible constellation types
-    switch ((seed, seed2)) {
-      case (1, 1):
-        console.log("blue, small-sized constellation");
-        // setPlanetState(1);
-        break;
-      case [1, 2]:
-        console.log("blue, medium-sized constellation");
-        // setPlanetState(1);
-        break;
-      case [1, 3]:
-        console.log("blue, large-sized constellation");
-        // setPlanetState(1);
-        break;
-      case [2, 1]:
-        console.log("black, small-sized constellation");
-        // setPlanetState(2);
-        break;
-      case [2, 2]:
-        console.log("black, medium-sized constellation");
-        // setPlanetState(2);
-        break;
-      case [2, 3]:
-        console.log("black, large-sized constellation");
-        // setPlanetState(2);
-        break;
-      case [3, 1]:
-        console.log("green, small-sized constellation");
-        // setPlanetState(3);
-        break;
-      case [3, 2]:
-        console.log("green, medium-sized constellation");
-        // setPlanetState(3);
-        break;
-      case [3, 3]:
-        console.log("green, large-sized constellation");
-        // setPlanetState(3);
-        break;
-      case [4, 1]:
-        console.log("mixed, small-sized constellation");
-        // setPlanetState(4);
-        break;
-      case [4, 2]:
-        console.log("mixed, medium-sized constellation");
-        // setPlanetState(4);
-        break;
-      case [4, 3]:
-        console.log("mixed, large-sized constellation");
-        // setPlanetState(4);
-        break;
-      default:
-        break;
-    }
+    switch (true) {
+      case seed === 1 && seed2 === 1:
+        console.log("magenta, small-sized constellation");
+        constellationMap = "magenta, small-sized constellation";
 
-    let constData = {} //object to take in the data aboout the constellations
-    switch (seed) {
-      case 1:
         setTransition("fadeOut");
         setTimeout(() => {
           setTransition("fadeIn");
@@ -372,29 +331,69 @@ function App() {
               location={[
                 Math.floor(Math.random() * (20 - 10) - 10),
                 Math.floor(Math.random() * (2 - 0) - 0),
-                Math.floor(Math.random() * (15 - 10) - 10),
+                Math.floor(Math.random() * (90 - 50) - 50),
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
-              amount={Math.floor(Math.random() * (4 - 2) + 2)}
-            />,]);
-
-          console.log("Galaxy:");
-          console.log(galaxy);
-
-          constData.id = galaxy[galaxy.length - 1].key;
-          constData.name = galaxy[galaxy.length - 1].name;
-          constData.planet = galaxy[galaxy.length - 1].colorSeed;
-          constData.stars = galaxy[galaxy.length - 1].amount;
-          constData.firstStarCoords = galaxy[galaxy.length - 1].location;
-          constData.props = [galaxy[galaxy.length - 1].speed, galaxy[galaxy.length - 1].creationTime, galaxy[galaxy.length - 1].lifeSpan];
-
-          helper.sendPost('/', constData);
-
+              amount={3}
+            />,
+          ]);
         }, timeOutSec);
-        //server call here
         break;
-      case 2:
+      case seed === 1 && seed2 === 2:
+        console.log("magenta, medium-sized constellation");
+        constellationMap = "magenta, medium-sized constellation";
+
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={1}
+              location={[
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (5 - 3) + 3)}
+            />,
+          ]);
+        }, timeOutSec);
+        break;
+      case seed === 1 && seed2 === 3:
+        console.log("magenta, large-sized constellation");
+        constellationMap = "magenta, large-sized constellation";
+
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={1}
+              location={[
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (7 - 5) + 5)}
+            />,
+          ]);
+        }, timeOutSec);
+        break;
+      case seed === 2 && seed2 === 1:
+        console.log("blue, small-sized constellation");
+        constellationMap = "blue, small-sized constellation";
+
         setTransition("fadeOut");
         setTimeout(() => {
           setTransition("fadeIn");
@@ -407,29 +406,69 @@ function App() {
               location={[
                 Math.floor(Math.random() * (20 - 10) - 10),
                 Math.floor(Math.random() * (2 - 0) - 0),
-                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (90 - 50) - 50),
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
-              amount={Math.floor(Math.random() * (6 - 4) + 4)}
+              amount={3}
             />,
           ]);
-
-          console.log("Galaxy:");
-          console.log(galaxy);
-
-          constData.id = galaxy[galaxy.length - 1].key;
-          constData.name = galaxy[galaxy.length - 1].name;
-          constData.planet = galaxy[galaxy.length - 1].colorSeed;
-          constData.stars = galaxy[galaxy.length - 1].amount;
-          constData.firstStarCoords = galaxy[galaxy.length - 1].location;
-          constData.props = [galaxy[galaxy.length - 1].speed, galaxy[galaxy.length - 1].creationTime, galaxy[galaxy.length - 1].lifeSpan];
-
-          helper.sendPost(constData);
-
         }, timeOutSec);
         break;
-      case 3:
+      case seed === 2 && seed2 === 2:
+        console.log("blue, medium-sized constellation");
+        constellationMap = "blue, medium-sized constellation";
+
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={2}
+              location={[
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (5 - 3) + 3)}
+            />,
+          ]);
+        }, timeOutSec);
+        break;
+      case seed === 2 && seed2 === 3:
+        console.log("blue, large-sized constellation");
+        constellationMap = "blue, large-sized constellation";
+
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={2}
+              location={[
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (7 - 5) + 5)}
+            />,
+          ]);
+        }, timeOutSec);
+        break;
+      case seed === 3 && seed2 === 1:
+        console.log("purple, small-sized constellation");
+        constellationMap = "purple, small-sized constellation";
+
         setTransition("fadeOut");
         setTimeout(() => {
           setTransition("fadeIn");
@@ -441,82 +480,307 @@ function App() {
               colorSeed={3}
               location={[
                 Math.floor(Math.random() * (20 - 10) - 10),
-                Math.floor(Math.random() * (3 - 0) - 0),
-                Math.floor(Math.random() * (40 - 20) - 20),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
-              amount={Math.floor(Math.random() * (8 - 6) + 6)}
+              amount={3}
             />,
           ]);
-
-          console.log("Galaxy:");
-          console.log(galaxy);
-
-          constData.id = galaxy[galaxy.length - 1].key;
-          constData.name = galaxy[galaxy.length - 1].name;
-          constData.planet = galaxy[galaxy.length - 1].colorSeed;
-          constData.stars = galaxy[galaxy.length - 1].amount;
-          constData.firstStarCoords = galaxy[galaxy.length - 1].location;
-          constData.props = [galaxy[galaxy.length - 1].speed, galaxy[galaxy.length - 1].creationTime, galaxy[galaxy.length - 1].lifeSpan];
-
-          helper.sendPost(constData);
-
         }, timeOutSec);
         break;
-      case 4:
+      case seed === 3 && seed2 === 2:
+        console.log("purple, medium-sized constellation");
+        constellationMap = "purple, medium-sized constellation";
+
         setTransition("fadeOut");
         setTimeout(() => {
-          //store this all in an object with the props inside the constellation then use the obj too push
           setTransition("fadeIn");
           setGalaxy((prevGalaxy) => [
             ...prevGalaxy,
             <Constellation
-              speed={Math.random() * (0.1 - 0.0) - 0.0}
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
               key={generateUniqueKey()}
-              colorSeed={4}
+              colorSeed={3}
               location={[
-                Math.floor(Math.random() * (30 - 10) - 10),
-                Math.floor(Math.random() * (3 - 0) - 0),
-                Math.floor(Math.random() * (80 - 40) - 40),
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
               ]}
               creationTime={Date.now()}
               lifeSpan={lifespan}
-              amount={Math.floor(Math.random() * (4 - 2) + 2)}
+              amount={Math.floor(Math.random() * (5 - 3) + 3)}
             />,
           ]);
+        }, timeOutSec);
+        break;
+      case seed === 3 && seed2 === 3:
+        console.log("purple, large-sized constellation");
+        constellationMap = "purple, large-sized constellation";
 
-          console.log("Galaxy:");
-          console.log(galaxy);
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={3}
+              location={[
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (7 - 5) + 5)}
+            />,
+          ]);
+        }, timeOutSec);
+        break;
+      case seed === 4 && seed2 === 1:
+        console.log("yellow, small-sized constellation");
+        constellationMap = "yellow, small-sized constellation";
 
-          constData.id = galaxy[galaxy.length - 1].key;
-          constData.name = galaxy[galaxy.length - 1].name;
-          constData.planet = galaxy[galaxy.length - 1].colorSeed;
-          constData.stars = galaxy[galaxy.length - 1].amount;
-          constData.firstStarCoords = galaxy[galaxy.length - 1].location;
-          constData.props = [galaxy[galaxy.length - 1].speed, galaxy[galaxy.length - 1].creationTime, galaxy[galaxy.length - 1].lifeSpan];
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={4}
+              location={[
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={3}
+            />,
+          ]);
+        }, timeOutSec);
+        break;
+      case seed === 4 && seed2 === 2:
+        console.log("yellow, medium-sized constellation");
+        constellationMap = "yellow, medium-sized constellation";
 
-          helper.sendPost('/', constData);
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={4}
+              location={[
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (5 - 3) + 3)}
+            />,
+          ]);
+        }, timeOutSec);
+        break;
+      case seed === 4 && seed2 === 3:
+        console.log("yellow, large-sized constellation");
+        constellationMap = "yellow, large-sized constellation";
 
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={4}
+              location={[
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (7 - 5) + 5)}
+            />,
+          ]);
+        }, timeOutSec);
+        break;
+      case seed === 5 && seed2 === 1:
+        console.log("white, small-sized constellation");
+        constellationMap = "white, small-sized constellation";
+
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={5}
+              location={[
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={3}
+            />,
+          ]);
+        }, timeOutSec);
+        break;
+      case seed === 5 && seed2 === 2:
+        console.log("white, medium-sized constellation");
+        constellationMap = "white, medium-sized constellation";
+
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={5}
+              location={[
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (5 - 3) + 3)}
+            />,
+          ]);
+        }, timeOutSec);
+        break;
+      case seed === 5 && seed2 === 3:
+        console.log("white, large-sized constellation");
+        constellationMap = "white, large-sized constellation";
+
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={5}
+              location={[
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (7 - 5) + 5)}
+            />,
+          ]);
+        }, timeOutSec);
+        break;
+      case seed === 6 && seed2 === 1:
+        console.log("mixed, small-sized constellation");
+        constellationMap = "mixed, small-sized constellation";
+
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={6}
+              location={[
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={3}
+            />,
+          ]);
+        }, timeOutSec);
+        break;
+      case seed === 6 && seed2 === 2:
+        console.log("mixed, medium-sized constellation");
+        constellationMap = "mixed, medium-sized constellation";
+
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={6}
+              location={[
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (5 - 3) + 3)}
+            />,
+          ]);
+        }, timeOutSec);
+        break;
+      case seed === 6 && seed2 === 3:
+        console.log("mixed, large-sized constellation");
+        constellationMap = "mixed, large-sized constellation";
+
+        setTransition("fadeOut");
+        setTimeout(() => {
+          setTransition("fadeIn");
+          setGalaxy((prevGalaxy) => [
+            ...prevGalaxy,
+            <Constellation
+              speed={Math.random() * (0.2 - 0.1) - 0.1}
+              key={generateUniqueKey()}
+              colorSeed={6}
+              location={[
+                Math.floor(Math.random() * (20 - 10) - 10),
+                Math.floor(Math.random() * (2 - 0) - 0),
+                Math.floor(Math.random() * (90 - 50) - 50),
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={lifespan}
+              amount={Math.floor(Math.random() * (7 - 5) + 5)}
+            />,
+          ]);
         }, timeOutSec);
         break;
       default:
-        //this should be doing smthng
         break;
     }
   }
 
   // troubleshooting purposes
-  useEffect(() => {
-    console.log("Updated galaxy array: ", galaxy);
-    console.log(
-      "Current constellation seeds: ",
-      constellationSeed,
-      " ",
-      constellationSeed2
-    );
-    console.log(predictionMade);
-  }, [galaxy]);
+  // useEffect(() => {
+  //   console.log("Updated galaxy array: ", galaxy);
+  //   console.log(
+  //     "Current constellation seeds: ",
+  //     constellationSeed,
+  //     " ",
+  //     constellationSeed2
+  //   );
+  //   console.log(predictionMade);
+  // }, [galaxy]);
 
   // Function to generate a unique key. This allows each constellation to have a unique identity
   function generateUniqueKey() {
@@ -528,11 +792,36 @@ function App() {
     return (
       <Constellation
         speed={Math.random() * (0.2 - 0.1) - 0.1}
-        key={generateUniqueName()}
+        key={generateUniqueKey()}
         colorSeed={2}
         location={[0, 0, 0]}
-        lifeSpan={5000}
+        lifeSpan={50000}
       />
+    );
+  }
+
+  function testFunc2() {
+    let amountArray = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
+    return (
+      <>
+        {amountArray.map((amount, amountIndex) => (
+          <>
+            <Constellation
+              speed={Math.floor(Math.random() * (0.05 - 0.02) + 0.02)}
+              key={generateUniqueKey()}
+              colorSeed={Math.floor(Math.random() * (4 - 1) + 1)}
+              location={[
+                Math.floor(Math.random() * (500 - 20) + 20),
+                Math.floor(Math.random() * (5 - 1) + 1),
+                100,
+              ]}
+              creationTime={Date.now()}
+              lifeSpan={5000}
+              amount={amount}
+            />
+          </>
+        ))}
+      </>
     );
   }
 
@@ -552,38 +841,9 @@ function App() {
     return () => clearInterval(interval);
   }, [galaxy]);
 
-  function renderVideo(code) {
-    let source;
-
-    switch (code) {
-      case 1:
-        source = "/planet1.mp4";
-      default:
-        break;
-    }
-
-    return code === 0 ? (
-      ""
-    ) : (
-      <div style={{ width: "100%", height: "100%" }} className={transition}>
-        <video
-          id="vidContainer2"
-          src={source}
-          style={{
-            opacity: "100%",
-            zIndex: "105",
-          }}
-          autoPlay
-        // loop
-        ></video>
-      </div>
-    );
-  }
-
   //Finally we return jsx that contains what the end user will see 👀
   return (
     <>
-      {renderVideo(planetState)}
       <div className="bg-black container max-w-full h-screen flex">
         <div
           id="label-container1"
@@ -596,23 +856,31 @@ function App() {
         ></div>
 
         <div id="webcam-container" className={transition}>
-          <video
+          {/* <video
             id="vidContainer"
             src={currentVid}
-            style={{ opacity: "10%", zIndex: -10 }}
+            style={{ opacity: "50%", zIndex: -10 }}
             autoPlay
             loop
-          ></video>
+          ></video> */}
         </div>
 
-        <Canvas className={transition} camera={[0, 0, 0]} style={{
-          background: "transparent",
-          position: "absolute",
-          zIndex: "100",
-        }}
+        <Canvas
+          className={transition}
+          camera={[0, 0, 0]}
+          style={{
+            // background: "transparent",
+            background: "black",
+            position: "absolute",
+            zIndex: "100",
+          }}
         >
-
-          <OrbitControls autoRotate={true} enablePan={true} autoRotateSpeed={0.1} />
+          <OrbitControls
+            position={[0, 0, 0]}
+            autoRotate={true}
+            enablePan={true}
+            autoRotateSpeed={0.1}
+          />
           <EffectComposer enabled={true}>
             <Bloom
               intensity={3.0} // The bloom intensity.
@@ -654,26 +922,3 @@ function App() {
 }
 
 export default App;
-
-/**
- * TO DO:
- * implement 2 model prediction functionality
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */

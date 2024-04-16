@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { Line } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import Star from "./Star";
+import Star from "./Star.jsx";
 
 //A component made up of star components. It handles its own movement independently
 
