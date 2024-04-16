@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
-import Airtable from 'airtable';
+import Airtable from "airtable";
 
 import {
   Bloom,
@@ -71,7 +71,10 @@ function App() {
   //
   //
 
-  const base  = new Airtable({ apiKey: 'patfDwEJuZGFpqDKx.0aedbab77f6c87ce1a448c8a0a7feacf925a5d448dc2f5832a4b135d72bacf0a' }).base('appubl7QMpKAxnY1K');
+  const base = new Airtable({
+    apiKey:
+      "patfDwEJuZGFpqDKx.0aedbab77f6c87ce1a448c8a0a7feacf925a5d448dc2f5832a4b135d72bacf0a",
+  }).base("appubl7QMpKAxnY1K");
 
   async function init() {
     const tmImage = window.tmImage; // Assuming tmImage is available globally
@@ -127,37 +130,37 @@ function App() {
   }
 
   useEffect(() => {
-    base('Constellations')
-      .select({view: 'Grid view'})
+    base("Constellations")
+      .select({ view: "Grid view" })
       .eachPage((record, fetchNextPage) => {
         // console.log("record.isArray()", record.isArray());
-        console.log(record)
-      //   const initConsts = () => {
-      //     return (
-      //       <>
-      //         {
-      //           record.map((i) => {
-      //             //console.log("i ", i.fields['Star Quantity'])
-      //               <Constellation
-      //                 speed={i.fields.Speed}
-      //                 key={i.fields.Key}
-      //                 colorSeed={i.fields.Colors}
-      //                 location={[
-      //                   Math.floor(Math.random() * (20 - 10) - 10),
-      //                   Math.floor(Math.random() * (2 - 0) - 0),
-      //                   Math.floor(Math.random() * (90 - 50) - 50),
-      //                 ]}
-      //                 creationTime={Date.now()}
-      //                 lifeSpan={lifespan}
-      //                 amount={i.fields['Star Quantity']}
-      //               />
-      //           })
-      //         }
-      //       </>
-      //     )
-      // }
-    })
-  })
+        console.log(record);
+        //   const initConsts = () => {
+        //     return (
+        //       <>
+        //         {
+        //           record.map((i) => {
+        //             //console.log("i ", i.fields['Star Quantity'])
+        //               <Constellation
+        //                 speed={i.fields.Speed}
+        //                 key={i.fields.Key}
+        //                 colorSeed={i.fields.Colors}
+        //                 location={[
+        //                   Math.floor(Math.random() * (20 - 10) - 10),
+        //                   Math.floor(Math.random() * (2 - 0) - 0),
+        //                   Math.floor(Math.random() * (90 - 50) - 50),
+        //                 ]}
+        //                 creationTime={Date.now()}
+        //                 lifeSpan={lifespan}
+        //                 amount={i.fields['Star Quantity']}
+        //               />
+        //           })
+        //         }
+        //       </>
+        //     )
+        // }
+      });
+  });
   //
   //
   // //
@@ -370,11 +373,11 @@ function App() {
     }
 
     let cSpeed, cColorSeed, cLocation, cAmount;
-    let cKey = generateUniqueKey()
+    let cKey = generateUniqueKey();
     switch (seed) {
       case 1:
         cSpeed = Math.random() * (0.2 - 0.1) - 0.1;
-        cColorSeed = 1; 
+        cColorSeed = 1;
         cLocation = [
           Math.floor(Math.random() * (20 - 10) - 10),
           Math.floor(Math.random() * (2 - 0) - 0),
@@ -385,7 +388,7 @@ function App() {
         break;
       case 2:
         cSpeed = Math.random() * (0.2 - 0.1) - 0.1;
-        cColorSeed = 2; 
+        cColorSeed = 2;
         cLocation = [
           Math.floor(Math.random() * (20 - 10) - 10),
           Math.floor(Math.random() * (2 - 0) - 0),
@@ -395,7 +398,7 @@ function App() {
         break;
       case 3:
         cSpeed = Math.random() * (0.2 - 0.1) - 0.1;
-        cColorSeed = 3; 
+        cColorSeed = 3;
         cLocation = [
           Math.floor(Math.random() * (20 - 10) - 10),
           Math.floor(Math.random() * (2 - 0) - 0),
@@ -405,7 +408,7 @@ function App() {
         break;
       case 4:
         cSpeed = Math.random() * (0.1 - 0.0) - 0.0;
-        cColorSeed = 4; 
+        cColorSeed = 4;
         cLocation = [
           Math.floor(Math.random() * (30 - 10) - 10),
           Math.floor(Math.random() * (3 - 0) - 0),
@@ -415,7 +418,7 @@ function App() {
         break;
       default:
         cSpeed = Math.random() * (0.1 - 0.0) - 0.0;
-        cColorSeed = Math.floor(Math.random() * (4 - 1) + 1); 
+        cColorSeed = Math.floor(Math.random() * (4 - 1) + 1);
         cLocation = [
           Math.floor(Math.random() * (30 - 10) - 10),
           Math.floor(Math.random() * (3 - 0) - 0),
@@ -443,19 +446,22 @@ function App() {
     }, timeOutSec);
 
     //add new constellation into database
-    base('Constellations').create({
-      Speed: cSpeed,
-      Key: cKey,
-      x: cLocation[0],
-      y: cLocation[1],
-      z: cLocation[2],
-      Colors: cColorSeed.toString(),
-      'Star Quantity': cAmount
-    }).then(record => {
-      console.log('Created record:', record);
-    }).catch(err => {
-      console.error('Error creating record:', err);
-    });
+    base("Constellations")
+      .create({
+        Speed: cSpeed,
+        Key: cKey,
+        x: cLocation[0],
+        y: cLocation[1],
+        z: cLocation[2],
+        Colors: cColorSeed.toString(),
+        "Star Quantity": cAmount,
+      })
+      .then((record) => {
+        console.log("Created record:", record);
+      })
+      .catch((err) => {
+        console.error("Error creating record:", err);
+      });
   }
 
   // troubleshooting purposes
@@ -479,19 +485,22 @@ function App() {
   function testFunc() {
     let amountArray = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
 
-    base('Constellations').create({
-      Speed: 0.4,
-      Key: 'sally',
-      x: 3,
-      y: 2,
-      z: 5,
-      Colors: '3',
-      'Star Quantity': 3
-    }).then(record => {
-      console.log('Created record:', record);
-    }).catch(err => {
-      console.error('Error creating record:', err);
-    });
+    base("Constellations")
+      .create({
+        Speed: 0.4,
+        Key: "sally",
+        x: 3,
+        y: 2,
+        z: 5,
+        Colors: "3",
+        "Star Quantity": 3,
+      })
+      .then((record) => {
+        console.log("Created record:", record);
+      })
+      .catch((err) => {
+        console.error("Error creating record:", err);
+      });
 
     return (
       <>
