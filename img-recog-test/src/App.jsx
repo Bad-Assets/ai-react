@@ -444,11 +444,13 @@ function App() {
 
     //add new constellation into database
     base('Constellations').create({
-      Speed: 0.4,
-      Key: 'sally',
-      'Initial Coordinate': '[5, 9, 8]',
-      Colors: '3',
-      'Star Quantity': 3
+      Speed: cSpeed,
+      Key: cKey,
+      x: cLocation[0],
+      y: cLocation[1],
+      z: cLocation[2],
+      Colors: cColorSeed.toString(),
+      'Star Quantity': cAmount
     }).then(record => {
       console.log('Created record:', record);
     }).catch(err => {
