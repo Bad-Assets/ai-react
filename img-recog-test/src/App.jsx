@@ -30,6 +30,7 @@ function App() {
   const [camState, setCamState] = useState(false); //webcam state to manage whether webcam is on/off
   const webcamRef = useRef(null); // Reference for webcam object
   const [galaxy, setGalaxy] = useState([]); //parent array for holding all constellations
+  const [dataArray, setDataArray] = useState([]);
 
   // link to models provided by Teachable Machine export panel
   // "https://teachablemachine.withgoogle.com/models/smA9m7ak-/"// 3 class model prototype(phone picture one)
@@ -133,32 +134,10 @@ function App() {
     base("Constellations")
       .select({ view: "Grid view" })
       .eachPage((record, fetchNextPage) => {
-        // console.log("record.isArray()", record.isArray());
-        console.log(record);
-        //   const initConsts = () => {
-        //     return (
-        //       <>
-        //         {
-        //           record.map((i) => {
-        //             //console.log("i ", i.fields['Star Quantity'])
-        //               <Constellation
-        //                 speed={i.fields.Speed}
-        //                 key={i.fields.Key}
-        //                 colorSeed={i.fields.Colors}
-        //                 location={[
-        //                   Math.floor(Math.random() * (20 - 10) - 10),
-        //                   Math.floor(Math.random() * (2 - 0) - 0),
-        //                   Math.floor(Math.random() * (90 - 50) - 50),
-        //                 ]}
-        //                 creationTime={Date.now()}
-        //                 lifeSpan={lifespan}
-        //                 amount={i.fields['Star Quantity']}
-        //               />
-        //           })
-        //         }
-        //       </>
-        //     )
-        // }
+        // console.log(record);
+        setDataArray(record);
+        console.log("This is the record from db: ", dataArray);
+        fetchNextPage();
       });
   });
   //
@@ -384,7 +363,6 @@ function App() {
           Math.floor(Math.random() * (90 - 50) - 50),
         ];
         cAmount = Math.floor(Math.random() * (4 - 2) + 2);
-        //server call here
         break;
       case 2:
         cSpeed = Math.random() * (0.2 - 0.1) - 0.1;
@@ -639,8 +617,22 @@ function App() {
             speed={0.5}
           />
           {galaxy}
+
+          {dataArray &&
+            dataArray.map((record) => (
+              <Constellation
+                speed={record.fields.Speed}
+                key={record.fields.Key}
+                colorSeed={parseInt(record.fields.Colors)}
+                location={[record.fields.x, record.fields.y, record.fields.z]}
+                creationTime={Date.now()}
+                lifeSpan={300000}
+                amount={record.fields["Star Quantity"]}
+              />
+              // console.log(record);
+            ))}
           {/* {initConsts} */}
-          {testFunc()}
+          {/* {testFunc()} */}
         </Canvas>
       </div>
     </>
