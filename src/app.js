@@ -38,7 +38,8 @@ const socket = require('socket.io')(http);
 // This option tells express to use /assets in a URL path as a static mirror to our client folder
 // Any requests to /assets will map to the client folder to find a file
 // For example going to /assets/img/favicon.png would return the favicon image
-app.use('/assets', express.static(path.resolve(`${__dirname}/../client/media`)));
+// app.use('/assets', express.static(path.resolve(`${__dirname}/../client/media`)));
+app.use('/client', express.static(path.resolve(`${__dirname}/../client/media`)));
 app.use(favicon(`${__dirname}/../client/media/cove-logo.png`));
 app.use(compression());
 app.use(bodyParser.urlencoded({ extended: true }));

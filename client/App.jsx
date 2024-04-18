@@ -312,7 +312,7 @@ function App() {
         constellationMap = "magenta, small-sized constellation";
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = constellationMap;
+        constData.name = helper.generateUniqueName();
         constData.planet = 1; //color seed
         constData.stars = 3; //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -325,6 +325,7 @@ function App() {
             ...prevGalaxy,
             <Constellation
               speed={constData.props.speed}
+              name={constData.name}
               key={constData.id}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
@@ -346,7 +347,7 @@ function App() {
         constellationMap = "magenta, medium-sized constellation";
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = constellationMap;
+        constData.name = helper.generateUniqueName();
         constData.planet = 1; //color seed
         constData.stars = Math.floor(Math.random() * (5 - 3) + 3); //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50),];
@@ -361,6 +362,7 @@ function App() {
             <Constellation
               speed={constData.props.speed}
               key={constData.id}
+              name={constData.name}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
               creationTime={constData.props.creationTime}
@@ -381,7 +383,7 @@ function App() {
         constellationMap = "magenta, large-sized constellation";
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 1; //color seed
         constData.stars = Math.floor(Math.random() * (7 - 5) + 5) //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -394,6 +396,7 @@ function App() {
             ...prevGalaxy,
             <Constellation
               speed={constData.props.speed}
+              name={constData.name}
               key={constData.id}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
@@ -416,7 +419,7 @@ function App() {
         constellationMap = "blue, small-sized constellation";
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 2; //color seed
         constData.stars = 3 //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -429,6 +432,7 @@ function App() {
             ...prevGalaxy,
             <Constellation
               speed={constData.props.speed}
+              name={constData.name}
               key={constData.id}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
@@ -450,7 +454,7 @@ function App() {
         constellationMap = "blue, medium-sized constellation";
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 2; //color seed
         constData.stars = Math.floor(Math.random() * (5 - 3) + 3) //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -463,6 +467,7 @@ function App() {
             ...prevGalaxy,
             <Constellation
               speed={constData.props.speed}
+              name={constData.name}
               key={constData.id}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
@@ -483,7 +488,7 @@ function App() {
         constellationMap = "blue, large-sized constellation";
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 2; //color seed
         constData.stars = Math.floor(Math.random() * (7 - 5) + 5) //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -496,6 +501,7 @@ function App() {
             ...prevGalaxy,
             <Constellation
               speed={constData.props.speed}
+              name={constData.name}
               key={constData.id}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
@@ -517,7 +523,7 @@ function App() {
         constellationMap = "purple, small-sized constellation";
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 3; //color seed
         constData.stars = 3 //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -530,6 +536,7 @@ function App() {
             ...prevGalaxy,
             <Constellation
               speed={constData.props.speed}
+              name={constData.name}
               key={constData.id}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
@@ -550,7 +557,7 @@ function App() {
         constellationMap = "purple, medium-sized constellation";
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 3; //color seed
         constData.stars = Math.floor(Math.random() * (5 - 3) + 3) //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -565,6 +572,7 @@ function App() {
             <Constellation
               speed={constData.props.speed}
               key={constData.id}
+              name={constData.name}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
               creationTime={constData.props.creationTime}
@@ -584,7 +592,7 @@ function App() {
         constellationMap = "purple, large-sized constellation";
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 3; //color seed
         constData.stars = Math.floor(Math.random() * (7 - 5) + 5) //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -597,6 +605,7 @@ function App() {
             ...prevGalaxy,
             <Constellation
               speed={constData.props.speed}
+              name={constData.name}
               key={constData.id}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
@@ -617,7 +626,7 @@ function App() {
         constellationMap = "yellow, small-sized constellation";
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 4; //color seed
         constData.stars = 3 //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -630,6 +639,7 @@ function App() {
             ...prevGalaxy,
             <Constellation
               speed={constData.props.speed}
+              name={constData.name}
               key={constData.id}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
@@ -650,7 +660,7 @@ function App() {
         constellationMap = "yellow, medium-sized constellation";
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 4; //color seed
         constData.stars = Math.floor(Math.random() * (5 - 3) + 3) //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -664,6 +674,7 @@ function App() {
             ...prevGalaxy,
             <Constellation
               speed={constData.props.speed}
+              name={constData.name}
               key={constData.id}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
@@ -684,7 +695,7 @@ function App() {
         constellationMap = "yellow, large-sized constellation";
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 4; //color seed
         constData.stars = Math.floor(Math.random() * (7 - 5) + 5) //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -697,6 +708,7 @@ function App() {
             ...prevGalaxy,
             <Constellation
               speed={constData.props.speed}
+              name={constData.name}
               key={constData.id}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
@@ -718,7 +730,7 @@ function App() {
 
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 5; //color seed
         constData.stars = 3 //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -731,6 +743,7 @@ function App() {
             ...prevGalaxy,
             <Constellation
               speed={constData.props.speed}
+              name={constData.name}
               key={constData.id}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
@@ -752,7 +765,7 @@ function App() {
 
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 5; //color seed
         constData.stars = Math.floor(Math.random() * (5 - 3) + 3) //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -765,6 +778,7 @@ function App() {
             ...prevGalaxy,
             <Constellation
               speed={constData.props.speed}
+              name={constData.name}
               key={constData.id}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
@@ -785,7 +799,7 @@ function App() {
         constellationMap = "white, large-sized constellation";
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 5; //color seed
         constData.stars = Math.floor(Math.random() * (7 - 5) + 5) //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -798,6 +812,7 @@ function App() {
             ...prevGalaxy,
             <Constellation
               speed={constData.props.speed}
+              name={constData.name}
               key={constData.id}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
@@ -818,7 +833,7 @@ function App() {
         constellationMap = "mixed, small-sized constellation";
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 6; //color seed
         constData.stars = 3 //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -831,6 +846,7 @@ function App() {
             ...prevGalaxy,
             <Constellation
               speed={constData.props.speed}
+              name={constData.name}
               key={constData.id}
               colorSeed={constData.planet}
               location={constData.firstStarCoords}
@@ -852,7 +868,7 @@ function App() {
 
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 6; //color seed
         constData.stars = Math.floor(Math.random() * (5 - 3) + 3) //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];
@@ -885,7 +901,7 @@ function App() {
         constellationMap = "mixed, large-sized constellation";
 
         constData.id = helper.generateUniqueKey();
-        // constData.name = helper.generateUniqueName();
+        constData.name = helper.generateUniqueName();
         constData.planet = 6; //color seed
         constData.stars = Math.floor(Math.random() * (7 - 5) + 5) //amount of stars
         constData.firstStarCoords = [Math.floor(Math.random() * (20 - 10) - 10), Math.floor(Math.random() * (2 - 0) - 0), Math.floor(Math.random() * (90 - 50) - 50)];

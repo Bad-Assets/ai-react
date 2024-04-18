@@ -6,13 +6,13 @@ import Star from "./Star";
 //A component made up of star components. It handles its own movement independently
 
 const Constellation = ({
-  //key?
-  // name,
+  key,
+  name,
   location,
   speed,
   colorSeed, //planet
-  // creationTime,
-  // lifeSpan,
+  creationTime,
+  lifeSpan,
   amount,
 }) => {
   let constellationArray = []; //array to hold star components
@@ -43,16 +43,30 @@ const Constellation = ({
     //determines colors of individual stars. Right now, it's semi-random/array based
     switch (colorSeed) {
       case 1:
-        colors = ["lightBlue", "cyan", "aquamarine"];
+        colors = ["magenta", "pink", "mediumorchid"];
         break;
       case 2:
-        colors = ["pink", "beige", "salmon"];
+        colors = ["lightBlue", "cyan", "aquamarine"];
         break;
       case 3:
         colors = ["violet", "mediumVioletRed", "plum"];
         break;
       case 4:
-        colors = ["limeGreen", "greenYellow", "green"];
+        colors = ["yellow", "beige", "vanilla"];
+        break;
+      case 5:
+        colors = ["white"];
+        break;
+      case 6:
+        colors = [
+          "violet",
+          "cyan",
+          "pink",
+          "beige",
+          "salmon",
+          "yellow",
+          "white",
+        ];
         break;
     }
 
