@@ -37,11 +37,13 @@ function App() {
   // "https://teachablemachine.withgoogle.com/models/bEFuEcfqt/"// janky 4 class model
   // "https://teachablemachine.withgoogle.com/models/I84nEtna1/"// more "stable" 4 class model
   // "https://teachablemachine.withgoogle.com/models/tNzFMd9l8/"//bottle cap type differentiation model
-  // "https://teachablemachine.withgoogle.com/models/q0vr7pziv/"//color differentiation model(latest)
-  // "https://teachablemachine.withgoogle.com/models/_yIvQ9IlM/"//density/amount recognition model(latest)
+  // "https://teachablemachine.withgoogle.com/models/q0vr7pziv/"//color differentiation model(EDGE)
+  // "https://teachablemachine.withgoogle.com/models/_yIvQ9IlM/"//density/amount recognition model(EDGE)\
+  // ""//color differentiation model(latest)
+  // "https://teachablemachine.withgoogle.com/models/6ZkXtp9aY/"//density/amount recognition model(latest)
 
   const URL1 = "https://teachablemachine.withgoogle.com/models/q0vr7pziv/";
-  const URL2 = "https://teachablemachine.withgoogle.com/models/_yIvQ9IlM/";
+  const URL2 = "https://teachablemachine.withgoogle.com/models/6ZkXtp9aY/";
 
   let model1,
     model2,
@@ -360,7 +362,7 @@ function App() {
         cLocation = [
           Math.floor(Math.random() * (20 - 10) - 10),
           Math.floor(Math.random() * (2 - 0) - 0),
-          Math.floor(Math.random() * (90 - 50) - 50),
+          Math.floor(Math.random() * (30 - 10) - 10),
         ];
         cAmount = Math.floor(Math.random() * (4 - 2) + 2);
         break;
@@ -370,7 +372,7 @@ function App() {
         cLocation = [
           Math.floor(Math.random() * (20 - 10) - 10),
           Math.floor(Math.random() * (2 - 0) - 0),
-          Math.floor(Math.random() * (90 - 50) - 50),
+          Math.floor(Math.random() * (30 - 10) - 10),
         ];
         cAmount = Math.floor(Math.random() * (6 - 4) + 4);
         break;
@@ -380,7 +382,7 @@ function App() {
         cLocation = [
           Math.floor(Math.random() * (20 - 10) - 10),
           Math.floor(Math.random() * (2 - 0) - 0),
-          Math.floor(Math.random() * (90 - 50) - 50),
+          Math.floor(Math.random() * (30 - 10) - 10),
         ];
         cAmount = Math.floor(Math.random() * (8 - 6) + 6);
         break;
@@ -390,7 +392,7 @@ function App() {
         cLocation = [
           Math.floor(Math.random() * (30 - 10) - 10),
           Math.floor(Math.random() * (3 - 0) - 0),
-          Math.floor(Math.random() * (90 - 50) - 50),
+          Math.floor(Math.random() * (30 - 10) - 10),
         ];
         cAmount = Math.floor(Math.random() * (4 - 2) + 2);
         break;
@@ -400,7 +402,7 @@ function App() {
         cLocation = [
           Math.floor(Math.random() * (30 - 10) - 10),
           Math.floor(Math.random() * (3 - 0) - 0),
-          Math.floor(Math.random() * (90 - 50) - 50),
+          Math.floor(Math.random() * (90 - 10) - 10),
         ];
         cAmount = Math.floor(Math.random() * (4 - 2) + 2);
         break;
