@@ -354,6 +354,7 @@ function App() {
     }
 
     let cSpeed, cColorSeed, cLocation, cAmount;
+    let cOffsetString = ""
     let cKey = generateUniqueKey();
     switch (seed) {
       case 1:
@@ -408,6 +409,21 @@ function App() {
         break;
     }
 
+    //create offset
+    for (let i = 0; i < cAmount; i++) {
+      cOffsetString += 
+        `${Math.random() * (8 - 3) - 3}, ${Math.random() * (6 - 4) - 4}, ${Math.random() * (4 - 3) - 3} | `
+    }
+
+    cOffsetString += 
+        `${Math.random() * (8 - 3) - 3}, ${Math.random() * (6 - 4) - 4}, ${Math.random() * (4 - 3) - 3}`;
+
+    let test = cOffsetString.split(" | ")
+    console.log("cOffsetArray ", test);
+    console.log("cOffsetArray[0]", test[0].split(", "));
+    let test2 = test[0]
+    console.log(test2)
+
     setTransition("fadeOut");
     setTimeout(() => {
       setTransition("fadeIn");
@@ -421,6 +437,7 @@ function App() {
           creationTime={Date.now()}
           lifeSpan={lifespan}
           amount={cAmount}
+          offsetString={cOffsetString}
         />,
       ]);
     }, timeOutSec);
@@ -433,6 +450,7 @@ function App() {
         x: cLocation[0],
         y: cLocation[1],
         z: cLocation[2],
+        offsetArray: cOffsetString,
         Colors: cColorSeed.toString(),
         "Star Quantity": cAmount,
       })
@@ -630,6 +648,7 @@ function App() {
                 creationTime={Date.now()}
                 lifeSpan={300000}
                 amount={record.fields["Star Quantity"]}
+                offsetString={record.fields.offsetArray}
               />
               // console.log(record);
             ))}
