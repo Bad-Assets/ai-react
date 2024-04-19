@@ -12,7 +12,7 @@ const Constellation = ({
   creationTime,
   lifeSpan,
   amount,
-  offsetString
+  offsetString,
 }) => {
   let constellationArray = []; //array to hold star components
   let colors; //variable to store color arrays
@@ -23,8 +23,8 @@ const Constellation = ({
   ]; //array to hold different randomly generated array lengths. This randomizes how many stars are in a given constellation//outdated. Used for testing
 
   //convert offset string from database to 2d array
-  let offsetArrays = offsetString.split(" | ")
-  
+  let offsetArrays = offsetString.split(" | ");
+
   //This loop handles the randomization and initialization of each individual star in a given constellation.
   //if you wanna change any property of an individual star in a constellation, this is where you do it
   for (let i = 0; i < amount; i++) {
@@ -32,25 +32,30 @@ const Constellation = ({
     let singleOffset = offsetArrays[i].split(", ");
 
     //maps through inital locations on every loop to add offset to stars AND randomize star scale every loop
-    const newPosition = location.map((coord, index) => coord + parseFloat(singleOffset[index]));
+    const newPosition = location.map(
+      (coord, index) => coord + parseFloat(singleOffset[index])
+    );
     const sScale = Math.floor(Math.random() * (6 - 4) - 4); //star scale randomizer
 
     //determines colors of individual stars. Right now, it's semi-random/array based
     switch (colorSeed) {
       case 1:
-        colors = ["lightBlue", "cyan", "aquamarine"];
+        colors = ["magenta"];
         break;
       case 2:
-        colors = ["pink", "beige", "salmon"];
+        colors = ["cyan"];
         break;
       case 3:
-        colors = ["violet", "mediumVioletRed", "plum"];
+        colors = ["yellow"];
         break;
       case 4:
-        colors = ["limeGreen", "greenYellow", "green"];
+        colors = ["violet"];
         break;
       case 5:
-        colors = ["limeGreen", "greenYellow", "green"];
+        colors = ["white"];
+        break;
+      case 6:
+        colors = ["green"];
         break;
     }
 

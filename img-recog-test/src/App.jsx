@@ -38,11 +38,11 @@ function App() {
   // "https://teachablemachine.withgoogle.com/models/I84nEtna1/"// more "stable" 4 class model
   // "https://teachablemachine.withgoogle.com/models/tNzFMd9l8/"//bottle cap type differentiation model
   // "https://teachablemachine.withgoogle.com/models/q0vr7pziv/"//color differentiation model(EDGE)
-  // "https://teachablemachine.withgoogle.com/models/_yIvQ9IlM/"//density/amount recognition model(EDGE)\
-  // ""//color differentiation model(latest)
+  // "https://teachablemachine.withgoogle.com/models/_yIvQ9IlM/"//density/amount recognition model(EDGE)
+  // "https://teachablemachine.withgoogle.com/models/UaXuqiPKf/"//color differentiation model(latest)
   // "https://teachablemachine.withgoogle.com/models/6ZkXtp9aY/"//density/amount recognition model(latest)
 
-  const URL1 = "https://teachablemachine.withgoogle.com/models/q0vr7pziv/";
+  const URL1 = "https://teachablemachine.withgoogle.com/models/UaXuqiPKf/";
   const URL2 = "https://teachablemachine.withgoogle.com/models/6ZkXtp9aY/";
 
   let model1,
@@ -138,7 +138,7 @@ function App() {
       .eachPage((record, fetchNextPage) => {
         // console.log(record);
         setDataArray(record);
-        console.log("This is the record from db: ", dataArray);
+        // console.log("This is the record from db: ", dataArray);
         fetchNextPage();
       });
   });
@@ -312,41 +312,59 @@ function App() {
     console.log("Generated: ", seed, ", ", seed2);
 
     //different possible constellation types
-    switch ((seed, seed2)) {
-      case (1, 1):
+    switch (true) {
+      case seed === 1 && seed2 === 1:
+        console.log("magenta, small-sized constellation");
+        break;
+      case seed === 1 && seed2 === 2:
+        console.log("magenta, medium-sized constellation");
+        break;
+      case seed === 1 && seed2 === 3:
+        console.log("magenta, large-sized constellation");
+        break;
+      case seed === 2 && seed2 === 1:
         console.log("blue, small-sized constellation");
         break;
-      case (1, 2):
+      case seed === 2 && seed2 === 2:
         console.log("blue, medium-sized constellation");
         break;
-      case (1, 3):
+      case seed === 2 && seed2 === 3:
         console.log("blue, large-sized constellation");
         break;
-      case (2, 1):
-        console.log("black, small-sized constellation");
+      case seed === 3 && seed2 === 1:
+        console.log("yellow, small-sized constellation");
         break;
-      case (2, 2):
-        console.log("black, medium-sized constellation");
+      case seed === 3 && seed2 === 2:
+        console.log("yellow, medium-sized constellation");
         break;
-      case (2, 3):
-        console.log("black, large-sized constellation");
+      case seed === 3 && seed2 === 3:
+        console.log("yellow, large-sized constellation");
         break;
-      case (3, 1):
-        console.log("green, small-sized constellation");
+      case seed === 4 && seed2 === 1:
+        console.log("purple, small-sized constellation");
         break;
-      case (3, 2):
-        console.log("green, medium-sized constellation");
+      case seed === 4 && seed2 === 2:
+        console.log("purple, medium-sized constellation");
         break;
-      case (3, 3):
-        console.log("green, large-sized constellation");
+      case seed === 4 && seed2 === 3:
+        console.log("purple, large-sized constellation");
         break;
-      case (4, 1):
+      case seed === 5 && seed2 === 1:
+        console.log("white, small-sized constellation");
+        break;
+      case seed === 5 && seed2 === 2:
+        console.log("white, medium-sized constellation");
+        break;
+      case seed === 5 && seed2 === 3:
+        console.log("white, large-sized constellation");
+        break;
+      case seed === 6 && seed2 === 1:
         console.log("mixed, small-sized constellation");
         break;
-      case (4, 2):
+      case seed === 6 && seed2 === 2:
         console.log("mixed, medium-sized constellation");
         break;
-      case (4, 3):
+      case seed === 6 && seed2 === 3:
         console.log("mixed, large-sized constellation");
         break;
       default:
@@ -354,7 +372,7 @@ function App() {
     }
 
     let cSpeed, cColorSeed, cLocation, cAmount;
-    let cOffsetString = ""
+    let cOffsetString = "";
     let cKey = generateUniqueKey();
     switch (seed) {
       case 1:
@@ -397,32 +415,55 @@ function App() {
         ];
         cAmount = Math.floor(Math.random() * (4 - 2) + 2);
         break;
-      default:
+      case 5:
         cSpeed = Math.random() * (0.1 - 0.0) - 0.0;
-        cColorSeed = Math.floor(Math.random() * (4 - 1) + 1);
+        cColorSeed = 5;
         cLocation = [
           Math.floor(Math.random() * (30 - 10) - 10),
           Math.floor(Math.random() * (3 - 0) - 0),
-          Math.floor(Math.random() * (90 - 10) - 10),
+          Math.floor(Math.random() * (30 - 10) - 10),
         ];
         cAmount = Math.floor(Math.random() * (4 - 2) + 2);
+        break;
+      case 6:
+        cSpeed = Math.random() * (0.1 - 0.0) - 0.0;
+        cColorSeed = 6;
+        cLocation = [
+          Math.floor(Math.random() * (30 - 10) - 10),
+          Math.floor(Math.random() * (3 - 0) - 0),
+          Math.floor(Math.random() * (30 - 10) - 10),
+        ];
+        cAmount = Math.floor(Math.random() * (4 - 2) + 2);
+        break;
+      default:
+        // cSpeed = Math.random() * (0.1 - 0.0) - 0.0;
+        // cColorSeed = Math.floor(Math.random() * (4 - 1) + 1);
+        // cLocation = [
+        //   Math.floor(Math.random() * (30 - 10) - 10),
+        //   Math.floor(Math.random() * (3 - 0) - 0),
+        //   Math.floor(Math.random() * (90 - 10) - 10),
+        // ];
+        // cAmount = Math.floor(Math.random() * (4 - 2) + 2);
+        alert("Bro's tweaking...");
         break;
     }
 
     //create offset
     for (let i = 0; i < cAmount; i++) {
-      cOffsetString += 
-        `${Math.random() * (8 - 3) - 3}, ${Math.random() * (6 - 4) - 4}, ${Math.random() * (4 - 3) - 3} | `
+      cOffsetString += `${Math.random() * (8 - 3) - 3}, ${
+        Math.random() * (6 - 4) - 4
+      }, ${Math.random() * (4 - 3) - 3} | `;
     }
 
-    cOffsetString += 
-        `${Math.random() * (8 - 3) - 3}, ${Math.random() * (6 - 4) - 4}, ${Math.random() * (4 - 3) - 3}`;
+    cOffsetString += `${Math.random() * (8 - 3) - 3}, ${
+      Math.random() * (6 - 4) - 4
+    }, ${Math.random() * (4 - 3) - 3}`;
 
-    let test = cOffsetString.split(" | ")
-    console.log("cOffsetArray ", test);
-    console.log("cOffsetArray[0]", test[0].split(", "));
-    let test2 = test[0]
-    console.log(test2)
+    // let test = cOffsetString.split(" | ");
+    // console.log("cOffsetArray ", test);
+    // console.log("cOffsetArray[0]", test[0].split(", "));
+    // let test2 = test[0];
+    // console.log(test2);
 
     setTransition("fadeOut");
     setTimeout(() => {
