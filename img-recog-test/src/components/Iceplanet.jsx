@@ -10,7 +10,7 @@ import { useFrame } from "@react-three/fiber";
 
 export default function IcePlanet(props) {
   const groupRef = useRef()
-  const { nodes, materials } = useGLTF('/iceplanet.glb')
+  const { nodes, materials } = useGLTF('/waterplanet_glow.glb')
 
   useFrame(({ clock }) => {
     // Rotate the mesh around the Y axis
@@ -20,10 +20,10 @@ export default function IcePlanet(props) {
   });
 
   return (
-    <group {...props} ref={groupRef} position={[3, 2, 0]} dispose={null}>
-      <mesh geometry={nodes.Icosphere.geometry} material={materials.Ice} />
+    <group {...props} ref={groupRef} position={[5, 0, 10]}  dispose={null}>
+      <mesh geometry={nodes.Planet.geometry} material={materials['Water Material']} />
     </group>
   )
 }
 
-useGLTF.preload('/iceplanet.glb')
+useGLTF.preload('/waterplanet_glow.glb')

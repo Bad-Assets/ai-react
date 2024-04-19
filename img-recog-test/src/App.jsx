@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Stars } from "@react-three/drei";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { OrbitControls, Stars, CameraControls } from "@react-three/drei";
 
 import {
   Bloom,
@@ -473,26 +473,24 @@ function App() {
 
   //function to test what constellations will look like
   function testFunc() {
-    let amountArray = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
+    //let amountArray = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
+    //let constellationInit = useRef();
+    //let initCoord = [4, -5, 15];
     return (
       <>
-        {amountArray.map((amount, amountIndex) => (
-          <>
+        {/* {amountArray.map((amount, amountIndex) => (
+          <> */}
             <Constellation
               speed={Math.floor(Math.random() * (0.05 - 0.02) + 0.02)}
               key={generateUniqueKey()}
               colorSeed={Math.floor(Math.random() * (4 - 1) + 1)}
-              location={[
-                Math.floor(Math.random() * (500 - 20) + 20),
-                Math.floor(Math.random() * (5 - 1) + 1),
-                100,
-              ]}
+              location={[1, 0, 1]}
               creationTime={Date.now()}
               lifeSpan={5000}
-              amount={amount}
+              amount={4}
             />
-          </>
-        ))}
+          {/* </>
+        ))} */}
       </>
     );
   }
@@ -616,7 +614,7 @@ function App() {
           <PurpleRockPlanet />
           <GasGiant />
           <IcePlanet />
-          {/* {testFunc()} */}
+          {testFunc()}
         </Canvas>
       </div>
     </>

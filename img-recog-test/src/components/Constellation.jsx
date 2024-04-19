@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Line } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { useThree, useFrame } from "@react-three/fiber";
 import Star from "./Star";
 
 //A component made up of star components. It handles its own movement independently
@@ -13,6 +13,8 @@ const Constellation = ({
   lifeSpan,
   amount
 }) => {
+
+  const { camera } = useThree()
   let constellationArray = []; //array to hold star components
   let colors; //variable to store color arrays
   const randomLengths = [
@@ -83,6 +85,14 @@ const Constellation = ({
     meshRef.current.position.x = 15 * Math.cos(elapsedTime * speed);
     meshRef.current.position.z = 15 * Math.sin(elapsedTime * speed);
   });
+
+  // useFrame(() => {
+  //   let initCoord = [4, -5, 10];
+  //   meshRef.current.position.lerp(initCoord, 0.1)
+  //   //camera.position.set(initCoord);
+  //   console.log("use frame inside constellation")
+  // });
+
 
   return (
     <>

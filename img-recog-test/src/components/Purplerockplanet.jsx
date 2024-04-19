@@ -9,7 +9,7 @@ import { useFrame } from "@react-three/fiber";
 
 export default function PurpleRockPlanet(props) {
   const groupRef = useRef()
-  const { nodes, materials } = useGLTF('/purplerockplanet.glb')
+  const { nodes, materials } = useGLTF('/rockplanet_glow.glb')
 
   useFrame(({ clock }) => {
     // Rotate the mesh around the Y axis
@@ -19,10 +19,10 @@ export default function PurpleRockPlanet(props) {
   });
 
   return (
-    <group {...props} ref={groupRef} position={[1, -1, 2]} dispose={null}>
+    <group {...props} ref={groupRef} position={[-15, -8, 15]} dispose={null}>
       <mesh geometry={nodes.Planet.geometry} material={materials.Rock} />
     </group>
   )
 }
 
-useGLTF.preload('/purplerockplanet.glb')
+useGLTF.preload('/rockplanet_glow.glb')

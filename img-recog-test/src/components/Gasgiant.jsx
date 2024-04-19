@@ -9,7 +9,7 @@ import { useFrame } from "@react-three/fiber";
 
 export default function GasGiant(props) {
   const groupRef = useRef()
-  const { nodes, materials } = useGLTF('/gasgiant.glb')
+  const { nodes, materials } = useGLTF('/gasgiant_glow.glb')
 
   useFrame(({ clock }) => {
     // Rotate the mesh around the Y axis
@@ -19,10 +19,10 @@ export default function GasGiant(props) {
   });
 
   return (
-    <group {...props} ref={groupRef} position={[-2, -2, 0]} dispose={null}>
+    <group {...props} ref={groupRef} position={[5, 8, 15]} dispose={null}>
       <mesh geometry={nodes.Cube.geometry} material={materials.Material} />
     </group>
   )
 }
 
-useGLTF.preload('/gasgiant.glb')
+useGLTF.preload('/gasgiant_glow.glb')
