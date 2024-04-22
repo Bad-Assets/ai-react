@@ -22,14 +22,22 @@ const Constellation = ({
     Math.floor(Math.random() * (4 - 3) + 3),
   ]; //array to hold different randomly generated array lengths. This randomizes how many stars are in a given constellation//outdated. Used for testing
 
+  // console.log("before split: ", offsetString);
   //convert offset string from database to 2d array
   let offsetArrays = offsetString.split(" | ");
+  // console.log("split array: ", offsetArrays);
+  // console.log("Amount: ", amount);
+  // console.log("Offset array length: ", offsetArrays.length);
+  // console.log(amount === offsetArrays.length ? offsetArrays : "Nothing...");
 
   //This loop handles the randomization and initialization of each individual star in a given constellation.
   //if you wanna change any property of an individual star in a constellation, this is where you do it
   for (let i = 0; i < amount; i++) {
+    // console.log("Offset Arrays: ", offsetArrays[i]);
+
     //random location offet to make sure that the star comps are more naturally spaced out
     let singleOffset = offsetArrays[i].split(", ");
+    // console.log("split: ", offsetArrays[i]);
 
     //maps through inital locations on every loop to add offset to stars AND randomize star scale every loop
     const newPosition = location.map(
@@ -96,7 +104,7 @@ const Constellation = ({
           <Star
             key={index}
             location={object.location}
-            color={colors[Math.floor(Math.random() * (3.1 - 0) - 0)]}
+            color={colors[0]}
             starScale={object.scale}
           />
         ))}

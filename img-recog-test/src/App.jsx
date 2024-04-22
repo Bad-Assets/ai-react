@@ -189,6 +189,10 @@ function App() {
   const [constellationSeed, setConstellationSeed] = useState(0);
   const [constellationSeed2, setConstellationSeed2] = useState(0);
 
+  /**
+   * Seed generation problem(possibly)
+   */
+
   async function predict() {
     if (predictionMade) {
       return;
@@ -209,6 +213,8 @@ function App() {
     } else {
       prediction2 = await model2.predict(webcamRef.current.canvas);
     }
+
+    console.log(prediction1, prediction2);
 
     for (let i = 0; i < maxPredictions2; i++) {
       const classPrediction2 =
@@ -242,6 +248,9 @@ function App() {
   }
 
   // After setting the prediction, generate the constellation
+  /**
+   * Seed generation problem(possibly)
+   */
   useEffect(() => {
     if (predictionMade) {
       console.log(
@@ -579,34 +588,6 @@ function App() {
     return () => clearInterval(interval);
   }, [galaxy]);
 
-  function renderVideo(code) {
-    let source;
-
-    switch (code) {
-      case 1:
-        source = "/planet1.mp4";
-      default:
-        break;
-    }
-
-    return code === 0 ? (
-      ""
-    ) : (
-      <div style={{ width: "100%", height: "100%" }} className={transition}>
-        <video
-          id="vidContainer2"
-          src={source}
-          style={{
-            opacity: "100%",
-            zIndex: "105",
-          }}
-          autoPlay
-          // loop
-        ></video>
-      </div>
-    );
-  }
-
   //Finally we return jsx that contains what the end user will see 👀
   return (
     <>
@@ -641,10 +622,14 @@ function App() {
           }}
         >
           <OrbitControls
-            position={[0, 0, 0]}
+            position={[0, 0, 0]} // Set camera position
             autoRotate={true}
             enablePan={true}
             autoRotateSpeed={0.1}
+            enableDamping={true}
+            dampingFactor={0.1}
+            target={[0, 0, 0]} // Set camera target
+            zoomSpeed={0.5}
           />
           <EffectComposer enabled={true}>
             <Bloom
@@ -691,9 +676,7 @@ function App() {
                 amount={record.fields["Star Quantity"]}
                 offsetString={record.fields.offsetArray}
               />
-              // console.log(record);
             ))}
-          {/* {initConsts} */}
           {/* {testFunc()} */}
         </Canvas>
       </div>
