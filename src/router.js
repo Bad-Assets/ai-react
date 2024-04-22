@@ -2,8 +2,7 @@
  * 1. the constellation sky: this will be shown through the whole exhibit and will be the main page
  * 2. search page: this will let the user search for a specific constellation after Imagine RIT
  */
-const { Constellation } = require("../client/components/Constellation");
-// import * as Constellation from "../client/components/Constellation";
+const { Constellation } = require("./Constellation.js");
 import io from "socket.io";
 
 const router = (app, socket) => {

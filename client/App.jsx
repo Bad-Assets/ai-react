@@ -17,7 +17,7 @@ import {
   GlitchMode,
 } from "postprocessing";
 
-import Constellation from "./components/Constellation";
+import Constellation from "./components/Constellation.jsx";
 import io from "socket.io-client";
 
 const socket = io(); //listen on the same port as the frontend
@@ -76,6 +76,10 @@ function App() {
   //
   //
   async function init() {
+    console.log("Initializing...");
+    console.log(window);
+    console.log('window.tmImage:');
+    console.log(window.tmImage);
     const tmImage = window.tmImage; // Assuming tmImage is available globally
 
     const modelURL1 = URL1 + "model.json";

@@ -6,15 +6,18 @@ const favicon = require('serve-favicon'); // favicon library to handle favicon r
 const bodyParser = require('body-parser'); // library to handle POST requests any information sent in an HTTP body
 const mongoose = require('mongoose'); // Mongoose is one of the most popular MongoDB libraries for node
 const http = require('http'); // http is a built-in node library to handle http traffic
+const cors = require('cors');
 
 // const expressHandlebars = require('express-handlebars');
 const session = require('express-session');
 
 const router = require('./router.js');
 
+const { Constellation } = require("./Constellation.js");
+
 // Port set by process.env.PORT environment variable.
 // If the process.env.PORT variable or the env.NODE_PORT variables do not exist, use port 3000
-const port = process.env.PORT || process.env.NODE_PORT || 3000;
+const port = process.env.PORT || process.env.NODE_PORT || 5173;
 
 const dbURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1/ConstellationCove';
 
@@ -39,8 +42,10 @@ const socket = require('socket.io')(http);
 // Any requests to /assets will map to the client folder to find a file
 // For example going to /assets/img/favicon.png would return the favicon image
 // app.use('/assets', express.static(path.resolve(`${__dirname}/../client/media`)));
+
+app.use(cors());
+
 app.use('/client', express.static(path.resolve(`${__dirname}/../client/media`)));
-app.use(favicon(`${__dirname}/../client/media/cove-logo.png`));
 app.use(compression());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -50,7 +55,6 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
 }));
-app.static();
 
 router(app, socket);
 
@@ -58,3 +62,30 @@ app.listen(port, (err) => {
   if (err) { throw err; }
   console.log(`Listening on port ${port}`);
 });
+
+app.post('/makeConstellation', (req, res) => {
+  makeConstellation(req, res, socket);
+});
+
+const makeConstellation = async (req, res, socket) => {
+  try {
+    const newConstellation = new Constellation({
+      id: req.body.id,
+      name: req.body.name,
+      planet: req.body.planet,
+      stars: req.body.stars,
+      firstStarCoords: req.body.firstStarCoords,
+      props: req.body.props,
+    });
+
+
+    newConstellation.save();
+    socket.emit('newConstellationMade', newConstellation);
+    return res.status(201).json({ message: 'Constellation created!' });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'An error occured making the constellation!' });
+  }
+
+  return true;
+};

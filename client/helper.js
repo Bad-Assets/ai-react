@@ -4,15 +4,20 @@ import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-
 /* Sends post requests to the server using fetch. Will look for various
    entries in the response JSON object, and will handle them appropriately.
 */
-const sendPost = async (url, data) => {
+const sendPost = async (path, data) => {
+
+    const url = `http://localhost:3000${path}`
 
     const response = await fetch(url, {
+        mode: 'no-cors',
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
     });
+
+    console.log('response:', response)
 
     const result = await response.json();
 
