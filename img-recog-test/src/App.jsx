@@ -138,7 +138,7 @@ function App() {
       .eachPage((record, fetchNextPage) => {
         // console.log(record);
         setDataArray(record);
-        // console.log("This is the record from db: ", dataArray);
+        console.log("This is the record from db: ", dataArray);
         fetchNextPage();
       });
   });
