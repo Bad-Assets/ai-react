@@ -202,6 +202,9 @@ function App() {
     let prediction2;
     let certaintyThreshold = 0.5;
 
+    let seed1;
+    let seed2;
+
     if (isIos) {
       prediction1 = await model1.predict(webcamRef.current.webcam);
     } else {
@@ -214,7 +217,7 @@ function App() {
       prediction2 = await model2.predict(webcamRef.current.canvas);
     }
 
-    console.log(prediction1, prediction2);
+    // console.log(prediction1, prediction2);
 
     for (let i = 0; i < maxPredictions2; i++) {
       const classPrediction2 =
@@ -224,7 +227,8 @@ function App() {
       if (
         parseFloat(prediction2[i].probability.toFixed(2)) > certaintyThreshold
       ) {
-        setConstellationSeed2(i + 1);
+        // setConstellationSeed2(i + 1);
+        seed2 = i + 1;
         break;
       }
     }
@@ -238,12 +242,15 @@ function App() {
         parseFloat(prediction1[i].probability.toFixed(2)) >
         certaintyThreshold + 0.1
       ) {
-        setConstellationSeed(i + 1); // Update the seed
-        setPredictionMade(true); // Indicate prediction made
+        // setConstellationSeed(i + 1); // Update the seed
+        // setPredictionMade(true); // Indicate prediction made
+        seed1 = i + 1;
         break; // Break the loop after the first prediction above threshold
       }
     }
-
+    setConstellationSeed(seed1);
+    setConstellationSeed2(seed2);
+    setPredictionMade(true);
     setCamState(false); // Turn off the webcam
   }
 
@@ -262,7 +269,7 @@ function App() {
       generateConstellation(constellationSeed, constellationSeed2);
       // setPredictionMade(false);
     }
-  }, [predictionMade]);
+  }, [predictionMade, constellationSeed, constellationSeed2]);
 
   //pressing the 'p' key will turn the webcam on
   useEffect(() => {
