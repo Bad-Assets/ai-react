@@ -81,9 +81,42 @@ const Constellation = ({
     // Rotate the mesh around the Y axis
     // meshRef.current.rotation.y += 0.0001;
     const elapsedTime = clock.getElapsedTime();
+    const angle = elapsedTime * 0.8;
+
     //orbit the location [0,0,0]
-    meshRef.current.position.x = 15 * Math.cos(elapsedTime * speed);
-    meshRef.current.position.z = 15 * Math.sin(elapsedTime * speed);
+    // meshRef.current.position.x = 15 * Math.cos(elapsedTime * speed);
+    // meshRef.current.position.z = 15 * Math.sin(elapsedTime * speed);
+
+    let orbit = false;
+
+
+    if (meshRef.current.position.x <= 4 && !orbit) {
+      meshRef.current.position.x += 0.1
+    }
+
+    if (meshRef.current.position.y <= 9 && !orbit) {
+      meshRef.current.position.y += 0.1
+    }
+
+    if (meshRef.current.position.z <= 5 && !orbit) {
+      meshRef.current.position.z += 0.1
+    }
+
+    if(meshRef.current.position.x === 4 || meshRef.current.position.y === 9 || meshRef.current.position.z === 5){
+      orbit = true;
+    }
+
+
+    if(orbit){
+      meshRef.current.position.y = 3;
+      meshRef.current.position.x = Math.cos(angle) * 4 + 3;
+      meshRef.current.position.z = Math.sin(angle) * 4 + 12;
+
+    }
+
+    // const vec = new THREE.Vector3(4, 9, 5);
+    // meshRef.current.position.lerp(vec, 0.1)
+
   });
 
   // useFrame(() => {
