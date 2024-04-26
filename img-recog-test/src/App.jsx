@@ -200,7 +200,7 @@ function App() {
 
     let prediction1;
     let prediction2;
-    let certaintyThreshold = 0.5;
+    let certaintyThreshold = 0.6;
 
     let seed1;
     let seed2;
@@ -326,6 +326,7 @@ function App() {
     const lifespan = 120000; //each constellation has a 2 minute lifespan
 
     console.log("Generated: ", seed, ", ", seed2);
+    let constellationMap = "";
 
     //different possible constellation types
     switch (true) {
@@ -613,7 +614,7 @@ function App() {
           <video
             id="vidContainer"
             src={currentVid}
-            style={{ opacity: "10%", zIndex: -10 }}
+            style={{ opacity: "0%", zIndex: -10 }}
             autoPlay
             loop
           ></video>
