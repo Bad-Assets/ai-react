@@ -21,7 +21,7 @@ const Star = ({ location, color, starScale }) => {
           toneMapped={true}
         />
       </mesh>
-      {FX()}
+      {/* {FX()} */}
     </group>
   );
 };

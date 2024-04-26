@@ -25,7 +25,7 @@ const vertexShader = glsl`
     // Apply additional offset to create radial particle emission for embers/sparks
     float emberAmplitude = 0.01; // Controls the size of the embers/sparks
     float emberFrequency = 20.0; // Controls the frequency of the ember/spark waves
-    float emberOffset = emberAmplitude * sin(time * emberFrequency + aOffset) * 0.1; // Calculate offset based on time and offset attribute
+    float emberOffset = emberAmplitude * sin(time * emberFrequency + aOffset) * 0.3; // Calculate offset based on time and offset attribute
     newPosition += normalize(position) * emberOffset;
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
@@ -71,7 +71,7 @@ const StarFX = ({ location, color, starScale }) => {
 
   return (
     <group>
-      <mesh position={[0.01, 0.01, 0.01]} ref={ref} scale={starScale / 2}>
+      <mesh position={[0.01, 0.01, 0.01]} ref={ref} scale={starScale}>
         <sphereGeometry args={[0.02, 128]} />
         <shaderMaterial
           uniforms={{
@@ -95,7 +95,7 @@ const StarFX = ({ location, color, starScale }) => {
           speed={1}
           color={"white"}
           emissive={color}
-          emissiveIntensity={5}
+          emissiveIntensity={10}
         />
       </mesh>
     </group>
