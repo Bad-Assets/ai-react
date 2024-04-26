@@ -20,7 +20,7 @@ export default function IcePlanet(props) {
   });
 
   return (
-    <group {...props} ref={groupRef} position={[5, 0, 10]}  dispose={null}>
+    <group {...props} ref={groupRef} position={[45, 50, 40]}  scale={[9, 9, 9]} dispose={null}>
       <mesh geometry={nodes.Planet.geometry} material={materials['Water Material']} />
     </group>
   )

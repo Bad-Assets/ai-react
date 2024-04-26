@@ -1,7 +1,8 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Line } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
 import Star from "./Star";
+import * as THREE from "three";
 
 //A component made up of star components. It handles its own movement independently
 
@@ -31,6 +32,9 @@ const Constellation = ({
   // console.log("Amount: ", amount);
   // console.log("Offset array length: ", offsetArrays.length);
   // console.log(amount === offsetArrays.length ? offsetArrays : "Nothing...");
+  // const [enteredPlanetRange, setEnteredPlanetRange] = useState(false);
+  // const [initialPosition, setInitialPosition] = useState(location);
+  
 
   //This loop handles the randomization and initialization of each individual star in a given constellation.
   //if you wanna change any property of an individual star in a constellation, this is where you do it
@@ -89,6 +93,8 @@ const Constellation = ({
 
   const meshRef = useRef();
 
+  let orbit = false;
+
   //this creates a mini animation loop to change loaction/orientation values over time
   useFrame(({ clock }) => {
     // Rotate the mesh around the Y axis
@@ -100,36 +106,80 @@ const Constellation = ({
     // meshRef.current.position.x = 15 * Math.cos(elapsedTime * speed);
     // meshRef.current.position.z = 15 * Math.sin(elapsedTime * speed);
 
-    let orbit = false;
+    let planet = "blue"
 
+    let targetX, targetY, targetZ;
 
-    if (meshRef.current.position.x <= 4 && !orbit) {
+    switch (planet) {
+      case "blue":
+        targetX = 3;
+        targetY = 3;
+        targetZ = 12;
+        break;
+      case "red":
+        targetX = -12;
+        targetY = 6;
+        targetZ = 17;
+        break;
+      case "yellow":
+        targetX = 3;
+        targetY = 11;
+        targetZ = 17;
+        break;
+      case "white":
+        targetX = 0;
+        targetY = -10;
+        targetZ = -17;
+        break;
+      case "purple":
+        targetX = -17;
+        targetY = -5;
+        targetZ = 17;
+        break;
+      default:
+        targetX = 0;
+        targetY = 0;
+        targetZ = 0;
+        break;
+    }
+
+    const vec = new THREE.Vector3(targetX, targetY, targetZ);
+
+    if (meshRef.current.position.x <= targetX && !orbit) {
       meshRef.current.position.x += 0.1
+    } else if (meshRef.current.position.x > targetX && !orbit) {
+      meshRef.current.position.x -= 0.1
     }
 
-    if (meshRef.current.position.y <= 9 && !orbit) {
+    if (meshRef.current.position.y <= targetY && !orbit) {
       meshRef.current.position.y += 0.1
+    } else if (meshRef.current.position.y > targetY && !orbit) {
+      meshRef.current.position.y -= 0.1
     }
 
-    if (meshRef.current.position.z <= 5 && !orbit) {
+    if (meshRef.current.position.z <= targetZ && !orbit) {
       meshRef.current.position.z += 0.1
+    } else if (meshRef.current.position.z > targetZ && !orbit) {
+      meshRef.current.position.z -= 0.1
     }
 
-    if(meshRef.current.position.x === 4 || meshRef.current.position.y === 9 || meshRef.current.position.z === 5){
-      orbit = true;
+    if (Math.abs(meshRef.current.position.x - (Math.cos(angle) * 4 + targetX)) <= 5 && Math.abs(meshRef.current.position.y - targetY) <= 5 && Math.abs(meshRef.current.position.z - (Math.sin(angle) * 4 + targetZ)) <= 5) {
+
+      console.log("orbit is true")
+      orbit = true
     }
+
+    // console.log("meshRef.current.position.x - (Math.cos(angle) * 4 + targetX) ", meshRef.current.position.x - (Math.cos(angle) * 4 + targetX))
+    // console.log("meshRef.current.position.y - targetY", meshRef.current.position.y - targetY)
+    // console.log("meshRef.current.position.z - (Math.sin(angle) * 4 + targetZ)", meshRef.current.position.z - (Math.sin(angle) * 4 + targetZ))
 
 
     if(orbit){
-      meshRef.current.position.y = 3;
-      meshRef.current.position.x = Math.cos(angle) * 4 + 3;
-      meshRef.current.position.z = Math.sin(angle) * 4 + 12;
+      meshRef.current.position.y = targetY;
+      meshRef.current.position.x = Math.cos(angle) * 4 + targetX;
+      meshRef.current.position.z = Math.sin(angle) * 4 + targetZ;
 
     }
-
-    // const vec = new THREE.Vector3(4, 9, 5);
-    // meshRef.current.position.lerp(vec, 0.1)
-
   });
 
   // useFrame(() => {

@@ -19,7 +19,7 @@ export default function GasGiant(props) {
   });
 
   return (
-    <group {...props} ref={groupRef} position={[5, 8, 15]} dispose={null}>
+    <group {...props} ref={groupRef} position={[-45, 30, 45]} scale={[10, 10, 10]} dispose={null}>
       <mesh geometry={nodes.Cube.geometry} material={materials.Material} />
     </group>
   )
