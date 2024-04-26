@@ -12,6 +12,7 @@ const Constellation = ({
   creationTime,
   lifeSpan,
   amount,
+  offsetString,
 }) => {
   let constellationArray = []; //array to hold star components
   let colors; //variable to store color arrays
@@ -21,46 +22,48 @@ const Constellation = ({
     Math.floor(Math.random() * (4 - 3) + 3),
   ]; //array to hold different randomly generated array lengths. This randomizes how many stars are in a given constellation//outdated. Used for testing
 
+  // console.log("before split: ", offsetString);
+  //convert offset string from database to 2d array
+  let offsetArrays = offsetString.split(" | ");
+  // console.log("split array: ", offsetArrays);
+  // console.log("Amount: ", amount);
+  // console.log("Offset array length: ", offsetArrays.length);
+  // console.log(amount === offsetArrays.length ? offsetArrays : "Nothing...");
+
   //This loop handles the randomization and initialization of each individual star in a given constellation.
   //if you wanna change any property of an individual star in a constellation, this is where you do it
   for (let i = 0; i < amount; i++) {
-    const offset = [
-      Math.random() * (8 - 3) - 3,
-      Math.random() * (6 - 4) - 4,
-      Math.random() * (4 - 3) - 3,
-    ]; //random location offet to make sure that the star comps are more naturally spaced out
+    // console.log("Offset Arrays: ", offsetArrays[i]);
+
+    //random location offet to make sure that the star comps are more naturally spaced out
+    let singleOffset = offsetArrays[i].split(", ");
+    // console.log("split: ", offsetArrays[i]);
 
     //maps through inital locations on every loop to add offset to stars AND randomize star scale every loop
-    const newPosition = location.map((coord, index) => coord + offset[index]);
+    const newPosition = location.map(
+      (coord, index) => coord + parseFloat(singleOffset[index])
+    );
     const sScale = Math.floor(Math.random() * (6 - 4) - 4); //star scale randomizer
 
     //determines colors of individual stars. Right now, it's semi-random/array based
     switch (colorSeed) {
       case 1:
-        colors = ["magenta", "pink", "lightRed"];
+        colors = ["magenta"];
         break;
       case 2:
-        colors = ["lightBlue", "cyan", "aquamarine"];
+        colors = ["cyan"];
         break;
       case 3:
-        colors = ["violet", "mediumVioletRed", "plum"];
+        colors = ["yellow"];
         break;
       case 4:
-        colors = ["yellow", "beige", "vanilla"];
+        colors = ["violet"];
         break;
       case 5:
         colors = ["white"];
         break;
       case 6:
-        colors = [
-          "violet",
-          "cyan",
-          "pink",
-          "beige",
-          "salmon",
-          "yellow",
-          "white",
-        ];
+        colors = ["green"];
         break;
     }
 
@@ -101,7 +104,7 @@ const Constellation = ({
           <Star
             key={index}
             location={object.location}
-            color={colors[Math.floor(Math.random() * (3.1 - 0) - 0)]}
+            color={colors[0]}
             starScale={object.scale}
           />
         ))}
