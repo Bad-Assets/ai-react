@@ -39,7 +39,7 @@ function App() {
   const webcamRef = useRef(null); // Reference for webcam object
   const [galaxy, setGalaxy] = useState([]); //parent array for holding all constellations
   const [dataArray, setDataArray] = useState([]);
-  const [camTarget, setCamTarget] = useState([70, 0, -30]);
+  const [camTarget, setCamTarget] = useState([0, 0, 0]);
 
   // link to models provided by Teachable Machine export panel
   // "https://teachablemachine.withgoogle.com/models/smA9m7ak-/"// 3 class model prototype(phone picture one)
@@ -51,7 +51,7 @@ function App() {
   // "https://teachablemachine.withgoogle.com/models/UaXuqiPKf/"//color differentiation model(latest)
   // "https://teachablemachine.withgoogle.com/models/6ZkXtp9aY/"//density/amount recognition model(latest)
 
-  const URL1 = "https://teachablemachine.withgoogle.com/models/UaXuqiPKf/";
+  const URL1 = "https://teachablemachine.withgoogle.com/models/pZ5rcJ6wi/";
   const URL2 = "https://teachablemachine.withgoogle.com/models/6ZkXtp9aY/";
 
   let model1,
@@ -185,7 +185,7 @@ function App() {
 
   // Function to let the webcam collect input every frame
   async function loop() {
-    if (camState && webcamRef.current) {
+    if (camState && webcamRef.current && !predictionMade) {
       webcamRef.current.update(); // update the webcam frame
       await predict();
     }
@@ -209,8 +209,10 @@ function App() {
 
   // PREDICT FUNCTION
   // run the webcam image through the image model
-  const [constellationSeed, setConstellationSeed] = useState(0);
-  const [constellationSeed2, setConstellationSeed2] = useState(0);
+  const [constellationSeeds, setConstellationSeeds] = useState({
+    s1: 0,
+    s2: 0,
+  });
 
   /**
    * Seed generation problem(possibly)
@@ -271,10 +273,10 @@ function App() {
         break; // Break the loop after the first prediction above threshold
       }
     }
-    setConstellationSeed(seed1);
-    setConstellationSeed2(seed2);
+    setConstellationSeeds({ s1: seed1, s2: seed2 });
     setPredictionMade(true);
     setCamState(false); // Turn off the webcam
+    console.log("Predict called");
   }
 
   // After setting the prediction, generate the constellation
@@ -285,14 +287,21 @@ function App() {
     if (predictionMade) {
       console.log(
         "Generating constellation: ",
-        constellationSeed,
+        constellationSeeds.s1,
         ", ",
-        constellationSeed2
+        constellationSeeds.s2
       );
-      generateConstellation(constellationSeed, constellationSeed2);
+      // setPredictionMade(false); // Reset predictionMade after generating constellations
+      // if (constellationSeeds.s1 !== -1 && constellationSeeds.s2 !== -1) {
+      //   console.log("This is from ue");
+      generateConstellation(constellationSeeds.s1, constellationSeeds.s2);
+      //   setPredictionMade(false); // Reset predictionMade after generating constellations
+      // }
       // setPredictionMade(false);
     }
-  }, [predictionMade, constellationSeed, constellationSeed2]);
+    // generateConstellation(constellationSeeds.s1, constellationSeeds.s2);
+    // setPredictionMade(false); // Reset predictionMade after generating constellations
+  }, [constellationSeeds]); // Add predictionMade as a dependency
 
   //pressing the 'p' key will turn the webcam on
   useEffect(() => {
@@ -350,6 +359,15 @@ function App() {
 
     console.log("Generated: ", seed, ", ", seed2);
     let constellationMap = "";
+
+    let chosenPlanetLoc;
+    let planetCoords = [
+      [70, 0, -25],
+      [50, 50, 45],
+      [-35, 30, 45],
+      [-50, 20, -25],
+      [20, 10, -55],
+    ];
 
     //different possible constellation types
     switch (true) {
@@ -414,6 +432,7 @@ function App() {
     let cSpeed, cColorSeed, cLocation, cAmount;
     let cOffsetString = "";
     let cKey = generateUniqueKey();
+    let cPlanet = 0;
     switch (seed) {
       case 1:
         cSpeed = Math.random() * (0.2 - 0.1) - 0.1;
@@ -424,6 +443,7 @@ function App() {
           Math.floor(Math.random() * (30 - 10) - 10),
         ];
         cAmount = Math.floor(Math.random() * (4 - 2) + 2);
+        chosenPlanetLoc = planetCoords[0];
         break;
       case 2:
         cSpeed = Math.random() * (0.2 - 0.1) - 0.1;
@@ -434,6 +454,7 @@ function App() {
           Math.floor(Math.random() * (30 - 10) - 10),
         ];
         cAmount = Math.floor(Math.random() * (6 - 4) + 4);
+        chosenPlanetLoc = planetCoords[1];
         break;
       case 3:
         cSpeed = Math.random() * (0.2 - 0.1) - 0.1;
@@ -444,6 +465,7 @@ function App() {
           Math.floor(Math.random() * (30 - 10) - 10),
         ];
         cAmount = Math.floor(Math.random() * (8 - 6) + 6);
+        chosenPlanetLoc = planetCoords[2];
         break;
       case 4:
         cSpeed = Math.random() * (0.1 - 0.0) - 0.0;
@@ -454,6 +476,7 @@ function App() {
           Math.floor(Math.random() * (30 - 10) - 10),
         ];
         cAmount = Math.floor(Math.random() * (4 - 2) + 2);
+        chosenPlanetLoc = planetCoords[3];
         break;
       case 5:
         cSpeed = Math.random() * (0.1 - 0.0) - 0.0;
@@ -464,6 +487,7 @@ function App() {
           Math.floor(Math.random() * (30 - 10) - 10),
         ];
         cAmount = Math.floor(Math.random() * (4 - 2) + 2);
+        chosenPlanetLoc = planetCoords[4];
         break;
       case 6:
         cSpeed = Math.random() * (0.1 - 0.0) - 0.0;
@@ -474,6 +498,13 @@ function App() {
           Math.floor(Math.random() * (30 - 10) - 10),
         ];
         cAmount = Math.floor(Math.random() * (4 - 2) + 2);
+        cPlanet = Math.floor(Math.random() * (5 - 0)) + 1;
+        chosenPlanetLoc = planetCoords[cPlanet];
+        // console.log(
+        //   "This is a mixed constellation :/",
+        //   Math.floor(Math.random() * (5 - 0)) + 1
+        // );
+        // alert("mixed");
         break;
       default:
         // cSpeed = Math.random() * (0.1 - 0.0) - 0.0;
@@ -484,7 +515,7 @@ function App() {
         //   Math.floor(Math.random() * (90 - 10) - 10),
         // ];
         // cAmount = Math.floor(Math.random() * (4 - 2) + 2);
-        alert("Bro's tweaking...");
+        // alert("Bro's tweaking...");
         break;
     }
 
@@ -519,9 +550,24 @@ function App() {
           lifeSpan={lifespan}
           amount={cAmount}
           offsetString={cOffsetString}
+          planet={cPlanet === 0 ? cColorSeed : cPlanet}
         />,
       ]);
     }, timeOutSec);
+    //change camera target
+    setTimeout(() => {
+      setCamTarget(chosenPlanetLoc);
+    }, 3000);
+    //set target back to 0,0,0
+
+    setTimeout(() => {
+      setTransition("fadeOut");
+    }, 20000);
+
+    setTimeout(() => {
+      setTransition("fadeIn");
+      setCamTarget([0, 0, 0]);
+    }, 23000);
 
     //add new constellation into database
     base("Constellations")
@@ -534,6 +580,7 @@ function App() {
         offsetArray: cOffsetString,
         Colors: cColorSeed.toString(),
         "Star Quantity": cAmount,
+        planet: cPlanet === 0 ? cColorSeed.toString() : cPlanet.toString(),
       })
       .then((record) => {
         console.log("Created record:", record);
@@ -541,6 +588,8 @@ function App() {
       .catch((err) => {
         console.error("Error creating record:", err);
       });
+
+    // setConstellationSeeds({ s1: -1, s2: -1 });
   }
 
   // troubleshooting purposes
@@ -548,9 +597,9 @@ function App() {
     console.log("Updated galaxy array: ", galaxy);
     console.log(
       "Current constellation seeds: ",
-      constellationSeed,
+      constellationSeeds.s1,
       " ",
-      constellationSeed2
+      constellationSeeds.s2
     );
     console.log(predictionMade);
   }, [galaxy]);
@@ -649,12 +698,12 @@ function App() {
       <div className="bg-black container max-w-full h-screen flex">
         <div
           id="label-container1"
-          className="z-[100] text-white/[0.5] absolute w-[10%] h-[10%] bottom-[20%] bg-transparent"
+          className="hidden z-[100] text-white/[0.5] absolute w-[10%] h-[10%] bottom-[20%] bg-transparent"
         ></div>
 
         <div
           id="label-container2"
-          className="z-[100] text-white/[0.5] absolute w-[10%] h-[10%] bottom-[40%] bg-transparent"
+          className="hidden z-[100] text-white/[0.5] absolute w-[10%] h-[10%] bottom-[40%] bg-transparent"
         ></div>
 
         <div id="webcam-container" className={transition}>
@@ -736,6 +785,7 @@ function App() {
                 lifeSpan={300000}
                 amount={record.fields["Star Quantity"]}
                 offsetString={record.fields.offsetArray}
+                planet={parseInt(record.fields.planet)}
               />
             ))}
           {/* {testFunc()} */}

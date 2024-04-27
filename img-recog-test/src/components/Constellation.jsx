@@ -14,9 +14,9 @@ const Constellation = ({
   lifeSpan,
   amount,
   offsetString,
+  planet,
 }) => {
-
-  const { camera } = useThree()
+  const { camera } = useThree();
   let constellationArray = []; //array to hold star components
   let colors; //variable to store color arrays
   const randomLengths = [
@@ -34,7 +34,6 @@ const Constellation = ({
   // console.log(amount === offsetArrays.length ? offsetArrays : "Nothing...");
   // const [enteredPlanetRange, setEnteredPlanetRange] = useState(false);
   // const [initialPosition, setInitialPosition] = useState(location);
-  
 
   //This loop handles the randomization and initialization of each individual star in a given constellation.
   //if you wanna change any property of an individual star in a constellation, this is where you do it
@@ -102,7 +101,6 @@ const Constellation = ({
     const elapsedTime = clock.getElapsedTime();
     const angle = elapsedTime * speed;
 
-
     //orbit the location [0,0,0]
     // meshRef.current.position.x = 15 * Math.cos(elapsedTime * speed);
     // meshRef.current.position.z = 15 * Math.sin(elapsedTime * speed);
@@ -111,7 +109,7 @@ const Constellation = ({
 
     //planet is determined by colorseed
     //if mixed, then planet is randomly assigned
-    let planet = colorSeed === 6 ? Math.floor(Math.random() * 5) + 1 : colorSeed
+    // let planet = colorSeed === 6 ? Math.floor(Math.random() * 5) + 1 : colorSeed
 
     //colorseed order: magenta, blue, yellow, purple, white, mixed
     switch (planet) {
@@ -163,39 +161,42 @@ const Constellation = ({
     const vec = new THREE.Vector3(targetX, targetY, targetZ);
 
     if (meshRef.current.position.x <= targetX && !orbit) {
-      meshRef.current.position.x += 0.1
+      meshRef.current.position.x += 0.1;
     } else if (meshRef.current.position.x > targetX && !orbit) {
-      meshRef.current.position.x -= 0.1
+      meshRef.current.position.x -= 0.1;
     }
 
     if (meshRef.current.position.y <= targetY && !orbit) {
-      meshRef.current.position.y += 0.1
+      meshRef.current.position.y += 0.1;
     } else if (meshRef.current.position.y > targetY && !orbit) {
-      meshRef.current.position.y -= 0.1
+      meshRef.current.position.y -= 0.1;
     }
 
     if (meshRef.current.position.z <= targetZ && !orbit) {
-      meshRef.current.position.z += 0.1
+      meshRef.current.position.z += 0.1;
     } else if (meshRef.current.position.z > targetZ && !orbit) {
-      meshRef.current.position.z -= 0.1
+      meshRef.current.position.z -= 0.1;
     }
 
-    if (Math.abs(meshRef.current.position.x - (Math.cos(angle) * 4 + targetX)) <= 5 && Math.abs(meshRef.current.position.y - targetY) <= 5 && Math.abs(meshRef.current.position.z - (Math.sin(angle) * 4 + targetZ)) <= 5) {
-
-      console.log("orbit is true")
-      orbit = true
+    if (
+      Math.abs(meshRef.current.position.x - (Math.cos(angle) * 4 + targetX)) <=
+        5 &&
+      Math.abs(meshRef.current.position.y - targetY) <= 5 &&
+      Math.abs(meshRef.current.position.z - (Math.sin(angle) * 4 + targetZ)) <=
+        5
+    ) {
+      console.log("orbit is true");
+      orbit = true;
     }
 
     // console.log("meshRef.current.position.x - (Math.cos(angle) * 4 + targetX) ", meshRef.current.position.x - (Math.cos(angle) * 4 + targetX))
     // console.log("meshRef.current.position.y - targetY", meshRef.current.position.y - targetY)
     // console.log("meshRef.current.position.z - (Math.sin(angle) * 4 + targetZ)", meshRef.current.position.z - (Math.sin(angle) * 4 + targetZ))
 
-
-    if(orbit){
+    if (orbit) {
       meshRef.current.position.y = targetY;
       meshRef.current.position.x = Math.cos(angle) * planetSize + targetX;
       meshRef.current.position.z = Math.sin(angle) * planetSize + targetZ;
-
     }
   });
 
@@ -205,7 +206,6 @@ const Constellation = ({
   //   //camera.position.set(initCoord);
   //   console.log("use frame inside constellation")
   // });
-
 
   return (
     <>
