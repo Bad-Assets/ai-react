@@ -146,7 +146,14 @@ function App() {
       .select({ view: "Grid view" })
       .eachPage((record, fetchNextPage) => {
         // console.log(record);
-        setDataArray(record);
+        // setDataArray(record);
+        setDataArray((record) =>
+          record.filter((constellation) => {
+            const lifespan = constellation.lifespan || 0;
+            const creationTime = constellation.creation_time || 0;
+            return Date.now() - creationTime <= lifespan;
+          })
+        )
         console.log("This is the record from db: ", dataArray);
         fetchNextPage();
       });
@@ -520,6 +527,8 @@ function App() {
         offsetArray: cOffsetString,
         Colors: cColorSeed.toString(),
         "Star Quantity": cAmount,
+        creation_time: Date.now(),
+        lifespan: lifespan
       })
       .then((record) => {
         console.log("Created record:", record);
