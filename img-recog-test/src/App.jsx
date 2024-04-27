@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Stars } from "@react-three/drei";
+import { OrbitControls, Stars, PerspectiveCamera } from "@react-three/drei";
 import Airtable from "airtable";
 
 import {
@@ -32,6 +32,8 @@ function App() {
   const [galaxy, setGalaxy] = useState([]); //parent array for holding all constellations
   const [dataArray, setDataArray] = useState([]);
 
+  const [cameraTarget, setCameraTarget] = useState([0, 0, 0]);
+
   // link to models provided by Teachable Machine export panel
   // "https://teachablemachine.withgoogle.com/models/smA9m7ak-/"// 3 class model prototype(phone picture one)
   // "https://teachablemachine.withgoogle.com/models/bEFuEcfqt/"// janky 4 class model
@@ -42,7 +44,7 @@ function App() {
   // "https://teachablemachine.withgoogle.com/models/UaXuqiPKf/"//color differentiation model(latest)
   // "https://teachablemachine.withgoogle.com/models/6ZkXtp9aY/"//density/amount recognition model(latest)
 
-  const URL1 = "https://teachablemachine.withgoogle.com/models/UaXuqiPKf/";
+  const URL1 = "https://teachablemachine.withgoogle.com/models/pZ5rcJ6wi/";
   const URL2 = "https://teachablemachine.withgoogle.com/models/6ZkXtp9aY/";
 
   let model1,
@@ -138,7 +140,7 @@ function App() {
       .eachPage((record, fetchNextPage) => {
         // console.log(record);
         setDataArray(record);
-        console.log("This is the record from db: ", dataArray);
+        // console.log("This is the record from db: ", dataArray);
         fetchNextPage();
       });
   });
@@ -186,8 +188,10 @@ function App() {
 
   // PREDICT FUNCTION
   // run the webcam image through the image model
-  const [constellationSeed, setConstellationSeed] = useState(0);
-  const [constellationSeed2, setConstellationSeed2] = useState(0);
+  const [constellationSeeds, setConstellationSeeds] = useState({
+    s1: 0,
+    s2: 0,
+  });
 
   /**
    * Seed generation problem(possibly)
@@ -248,8 +252,7 @@ function App() {
         break; // Break the loop after the first prediction above threshold
       }
     }
-    setConstellationSeed(seed1);
-    setConstellationSeed2(seed2);
+    setConstellationSeeds({ s1: seed1, s2: seed2 });
     setPredictionMade(true);
     setCamState(false); // Turn off the webcam
   }
@@ -262,14 +265,14 @@ function App() {
     if (predictionMade) {
       console.log(
         "Generating constellation: ",
-        constellationSeed,
+        constellationSeeds.s1,
         ", ",
-        constellationSeed2
+        constellationSeeds.s2
       );
-      generateConstellation(constellationSeed, constellationSeed2);
+      generateConstellation(constellationSeeds.s1, constellationSeeds.s2);
       // setPredictionMade(false);
     }
-  }, [predictionMade, constellationSeed, constellationSeed2]);
+  }, [constellationSeeds]);
 
   //pressing the 'p' key will turn the webcam on
   useEffect(() => {
@@ -396,72 +399,75 @@ function App() {
         cSpeed = Math.random() * (0.2 - 0.1) - 0.1;
         cColorSeed = 1;
         cLocation = [
-          Math.floor(Math.random() * (20 - 10) - 10),
-          Math.floor(Math.random() * (2 - 0) - 0),
-          Math.floor(Math.random() * (30 - 10) - 10),
+          Math.floor(Math.random() * (15 - 10) - 10),
+          Math.floor(Math.random() * (4 - 0) - 0),
+          Math.floor(Math.random() * (10 - 5) - 5),
         ];
-        cAmount = Math.floor(Math.random() * (4 - 2) + 2);
+        // cAmount = Math.floor(Math.random() * (4 - 2) + 2);
         break;
       case 2:
         cSpeed = Math.random() * (0.2 - 0.1) - 0.1;
         cColorSeed = 2;
         cLocation = [
-          Math.floor(Math.random() * (20 - 10) - 10),
-          Math.floor(Math.random() * (2 - 0) - 0),
-          Math.floor(Math.random() * (30 - 10) - 10),
+          Math.floor(Math.random() * (15 - 10) - 10),
+          Math.floor(Math.random() * (4 - 0) - 0),
+          Math.floor(Math.random() * (10 - 5) - 5),
         ];
-        cAmount = Math.floor(Math.random() * (6 - 4) + 4);
+        // cAmount = Math.floor(Math.random() * (6 - 4) + 4);
         break;
       case 3:
         cSpeed = Math.random() * (0.2 - 0.1) - 0.1;
         cColorSeed = 3;
         cLocation = [
-          Math.floor(Math.random() * (20 - 10) - 10),
-          Math.floor(Math.random() * (2 - 0) - 0),
-          Math.floor(Math.random() * (30 - 10) - 10),
+          Math.floor(Math.random() * (15 - 10) - 10),
+          Math.floor(Math.random() * (4 - 0) - 0),
+          Math.floor(Math.random() * (10 - 5) - 5),
         ];
-        cAmount = Math.floor(Math.random() * (8 - 6) + 6);
+        // cAmount = Math.floor(Math.random() * (8 - 6) + 6);
         break;
       case 4:
         cSpeed = Math.random() * (0.1 - 0.0) - 0.0;
         cColorSeed = 4;
         cLocation = [
-          Math.floor(Math.random() * (30 - 10) - 10),
-          Math.floor(Math.random() * (3 - 0) - 0),
-          Math.floor(Math.random() * (30 - 10) - 10),
+          Math.floor(Math.random() * (15 - 10) - 10),
+          Math.floor(Math.random() * (4 - 0) - 0),
+          Math.floor(Math.random() * (10 - 5) - 5),
         ];
-        cAmount = Math.floor(Math.random() * (4 - 2) + 2);
+        // cAmount = Math.floor(Math.random() * (4 - 2) + 2);
         break;
       case 5:
         cSpeed = Math.random() * (0.1 - 0.0) - 0.0;
         cColorSeed = 5;
         cLocation = [
-          Math.floor(Math.random() * (30 - 10) - 10),
-          Math.floor(Math.random() * (3 - 0) - 0),
-          Math.floor(Math.random() * (30 - 10) - 10),
+          Math.floor(Math.random() * (15 - 10) - 10),
+          Math.floor(Math.random() * (4 - 0) - 0),
+          Math.floor(Math.random() * (10 - 5) - 5),
         ];
-        cAmount = Math.floor(Math.random() * (4 - 2) + 2);
+        // cAmount = Math.floor(Math.random() * (4 - 2) + 2);
         break;
       case 6:
         cSpeed = Math.random() * (0.1 - 0.0) - 0.0;
         cColorSeed = 6;
         cLocation = [
-          Math.floor(Math.random() * (30 - 10) - 10),
-          Math.floor(Math.random() * (3 - 0) - 0),
-          Math.floor(Math.random() * (30 - 10) - 10),
+          Math.floor(Math.random() * (15 - 10) - 10),
+          Math.floor(Math.random() * (4 - 0) - 0),
+          Math.floor(Math.random() * (10 - 5) - 5),
         ];
-        cAmount = Math.floor(Math.random() * (4 - 2) + 2);
+        // cAmount = Math.floor(Math.random() * (4 - 2) + 2);
         break;
       default:
-        // cSpeed = Math.random() * (0.1 - 0.0) - 0.0;
-        // cColorSeed = Math.floor(Math.random() * (4 - 1) + 1);
-        // cLocation = [
-        //   Math.floor(Math.random() * (30 - 10) - 10),
-        //   Math.floor(Math.random() * (3 - 0) - 0),
-        //   Math.floor(Math.random() * (90 - 10) - 10),
-        // ];
-        // cAmount = Math.floor(Math.random() * (4 - 2) + 2);
-        alert("Bro's tweaking...");
+        break;
+    }
+
+    switch (seed2) {
+      case 1:
+        cAmount = Math.floor(Math.random() * (3 - 1) + 1);
+        break;
+      case 2:
+        cAmount = Math.floor(Math.random() * (6 - 4) + 4);
+        break;
+      case 3:
+        cAmount = Math.floor(Math.random() * (8 - 6) + 6);
         break;
     }
 
@@ -525,11 +531,11 @@ function App() {
     console.log("Updated galaxy array: ", galaxy);
     console.log(
       "Current constellation seeds: ",
-      constellationSeed,
+      constellationSeeds.s1,
       " ",
-      constellationSeed2
+      constellationSeeds.s2
     );
-    console.log(predictionMade);
+    console.log("Prediction made: ", predictionMade);
   }, [galaxy]);
 
   // Function to generate a unique key. This allows each constellation to have a unique identity
@@ -622,7 +628,7 @@ function App() {
 
         <Canvas
           className={transition}
-          camera={[0, 0, 0]}
+          // camera={[0, 0, 0]}
           style={{
             background: "transparent",
             position: "absolute",
@@ -639,6 +645,7 @@ function App() {
             target={[0, 0, 0]} // Set camera target
             zoomSpeed={0.5}
           />
+          <PerspectiveCamera />
           <EffectComposer enabled={true}>
             <Bloom
               intensity={3.0} // The bloom intensity.
@@ -665,7 +672,7 @@ function App() {
             radius={300}
             depth={50}
             count={5000}
-            factor={4}
+            factor={15}
             saturation={0}
             fade
             speed={0.5}

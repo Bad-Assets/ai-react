@@ -48,7 +48,7 @@ const Constellation = ({
     //determines colors of individual stars. Right now, it's semi-random/array based
     switch (colorSeed) {
       case 1:
-        colors = ["magenta"];
+        colors = ["red"];
         break;
       case 2:
         colors = ["cyan"];
