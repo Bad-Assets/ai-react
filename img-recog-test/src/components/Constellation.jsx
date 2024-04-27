@@ -100,48 +100,58 @@ const Constellation = ({
     // Rotate the mesh around the Y axis
     // meshRef.current.rotation.y += 0.0001;
     const elapsedTime = clock.getElapsedTime();
-    const angle = elapsedTime * 0.8;
+    //const angle = elapsedTime * speed;
+    const angle = elapsedTime * 2;
+
 
     //orbit the location [0,0,0]
     // meshRef.current.position.x = 15 * Math.cos(elapsedTime * speed);
     // meshRef.current.position.z = 15 * Math.sin(elapsedTime * speed);
 
-    let planet = "blue"
+    let planet = "purple"
 
-    let targetX, targetY, targetZ;
+    let targetX, targetY, targetZ, planetSize;
 
     switch (planet) {
       case "blue":
-        targetX = 3;
-        targetY = 3;
-        targetZ = 12;
+        targetX = 50;
+        targetY = 50;
+        targetZ = 45;
+        planetSize = 12;
         break;
       case "red":
-        targetX = -12;
-        targetY = 6;
-        targetZ = 17;
+        targetX = 75;
+        targetY = 0;
+        targetZ = -25;
+        planetSize = 15;
         break;
       case "yellow":
-        targetX = 3;
-        targetY = 11;
-        targetZ = 17;
+        targetX = -35;
+        targetY = 30;
+        targetZ = 45;
+        planetSize = 20;
         break;
       case "white":
-        targetX = 0;
-        targetY = -10;
-        targetZ = -17;
+        targetX = 20;
+        targetY = 10;
+        targetZ = -55;
+        planetSize = 15;
         break;
       case "purple":
-        targetX = -17;
-        targetY = -5;
-        targetZ = 17;
+        targetX = -50;
+        targetY = 20;
+        targetZ = -25;
+        planetSize = 14;
         break;
       default:
         targetX = 0;
         targetY = 0;
         targetZ = 0;
+        planetSize = 12;
         break;
     }
+
+    orbit = true;
 
     const vec = new THREE.Vector3(targetX, targetY, targetZ);
 
@@ -176,8 +186,8 @@ const Constellation = ({
 
     if(orbit){
       meshRef.current.position.y = targetY;
-      meshRef.current.position.x = Math.cos(angle) * 4 + targetX;
-      meshRef.current.position.z = Math.sin(angle) * 4 + targetZ;
+      meshRef.current.position.x = Math.cos(angle) * planetSize + targetX;
+      meshRef.current.position.z = Math.sin(angle) * planetSize + targetZ;
 
     }
   });

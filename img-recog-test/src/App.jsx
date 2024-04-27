@@ -19,10 +19,12 @@ import {
 
 import Constellation from "./components/Constellation";
 import FirePlanet from "./components/FireplanetFINAL";
-import RockPlanet from "./components/RockPlanet";
+// import RockPlanet from "./components/RockPlanet";
 import PurpleRockPlanet from "./components/Purplerockplanet";
-import IcePlanet from "./components/IcePlanet";
+import WaterPlanet from "./components/WaterPlanet";
 import GasGiant from "./components/Gasgiant";
+import WhitePlanet from "./components/Whiteplanet";
+
 
 
 
@@ -705,7 +707,8 @@ function App() {
           <FirePlanet />
           <PurpleRockPlanet />
           <GasGiant />
-          <IcePlanet />
+          <WaterPlanet />
+          < WhitePlanet />
           {/* {testFunc()} */}
 
           {dataArray &&

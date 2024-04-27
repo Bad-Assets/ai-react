@@ -19,7 +19,7 @@ export default function PurpleRockPlanet(props) {
   });
 
   return (
-    <group {...props} ref={groupRef} position={[-35, 20, -60]} scale={[6, 6, 6]} dispose={null}>
+    <group {...props} ref={groupRef} position={[-55, 20, -30]} scale={[7, 7, 7]} dispose={null}>
       <mesh geometry={nodes.Planet.geometry} material={materials.Rock} />
     </group>
   )

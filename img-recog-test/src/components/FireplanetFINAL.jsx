@@ -19,7 +19,7 @@ export default function FirePlanet(props) {
   });
 
   return (
-    <group {...props} ref={groupRef} position={[50, 0, -60]} scale={[8, 8, 8]} dispose={null}>
+    <group {...props} ref={groupRef} position={[70, 0, -30]} scale={[8, 8, 8]} dispose={null}>
       <mesh geometry={nodes.Planet.geometry} material={materials.Lava} />
       <mesh geometry={nodes.Atmosphere.geometry} material={materials.Clouds} scale={1.036} />
     </group>
