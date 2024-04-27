@@ -100,44 +100,51 @@ const Constellation = ({
     // Rotate the mesh around the Y axis
     // meshRef.current.rotation.y += 0.0001;
     const elapsedTime = clock.getElapsedTime();
-    //const angle = elapsedTime * speed;
-    const angle = elapsedTime * 2;
+    const angle = elapsedTime * speed;
 
 
     //orbit the location [0,0,0]
     // meshRef.current.position.x = 15 * Math.cos(elapsedTime * speed);
     // meshRef.current.position.z = 15 * Math.sin(elapsedTime * speed);
 
-    let planet = "purple"
-
     let targetX, targetY, targetZ, planetSize;
 
+    //planet is determined by colorseed
+    //if mixed, then planet is randomly assigned
+    let planet = colorSeed === 6 ? Math.floor(Math.random() * 5) + 1 : colorSeed
+
+    //colorseed order: magenta, blue, yellow, purple, white, mixed
     switch (planet) {
-      case "blue":
+      //blue
+      case 2:
         targetX = 50;
         targetY = 50;
         targetZ = 45;
         planetSize = 12;
         break;
-      case "red":
+      //red or magenta
+      case 1:
         targetX = 75;
         targetY = 0;
         targetZ = -25;
         planetSize = 15;
         break;
-      case "yellow":
+      //yellow
+      case 3:
         targetX = -35;
         targetY = 30;
         targetZ = 45;
         planetSize = 20;
         break;
-      case "white":
+      //white
+      case 5:
         targetX = 20;
         targetY = 10;
         targetZ = -55;
         planetSize = 15;
         break;
-      case "purple":
+      //purple
+      case 4:
         targetX = -50;
         targetY = 20;
         targetZ = -25;
