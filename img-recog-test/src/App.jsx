@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Stars, CameraControls } from "@react-three/drei";
+import { OrbitControls, Stars } from "@react-three/drei";
 import Airtable from "airtable";
+
+import SceneCam from "./components/sceneCam";
 
 import {
   Bloom,
@@ -25,9 +27,6 @@ import WaterPlanet from "./components/WaterPlanet";
 import GasGiant from "./components/Gasgiant";
 import WhitePlanet from "./components/Whiteplanet";
 
-
-
-
 function App() {
   //
   //
@@ -40,6 +39,7 @@ function App() {
   const webcamRef = useRef(null); // Reference for webcam object
   const [galaxy, setGalaxy] = useState([]); //parent array for holding all constellations
   const [dataArray, setDataArray] = useState([]);
+  const [camTarget, setCamTarget] = useState([70, 0, -30]);
 
   // link to models provided by Teachable Machine export panel
   // "https://teachablemachine.withgoogle.com/models/smA9m7ak-/"// 3 class model prototype(phone picture one)
@@ -142,22 +142,36 @@ function App() {
   }
 
   useEffect(() => {
-    base("Constellations")
-      .select({ view: "Grid view" })
-      .eachPage((record, fetchNextPage) => {
-        // console.log(record);
-        // setDataArray(record);
-        setDataArray((record) =>
+    if (dataArray.length === 0) {
+      base("Constellations")
+        .select({ view: "Grid view" })
+        .eachPage((record, fetchNextPage) => {
+          // console.log(record);
+          setDataArray(record);
+          console.log("[1]This is the record from db: ", dataArray);
+          fetchNextPage();
+        });
+    } else {
+      setTimeout(() => {
+        base("Constellations")
+          .select({ view: "Grid view" })
+          .eachPage((record, fetchNextPage) => {
+            // console.log(record);
+            // setDataArray(record);
+            setDataArray((record) =>
           record.filter((constellation) => {
             const lifespan = constellation.lifespan || 0;
             const creationTime = constellation.creation_time || 0;
             return Date.now() - creationTime <= lifespan;
           })
         )
-        console.log("This is the record from db: ", dataArray);
-        fetchNextPage();
-      });
+        console.log("[2]This is the record from db: ", dataArray);
+            fetchNextPage();
+          });
+      }, 15000);
+    }
   });
+
   //
   //
   // //
@@ -580,16 +594,16 @@ function App() {
       <>
         {/* {amountArray.map((amount, amountIndex) => (
           <> */}
-            <Constellation
-              speed={Math.floor(Math.random() * (0.05 - 0.02) + 0.02)}
-              key={generateUniqueKey()}
-              colorSeed={Math.floor(Math.random() * (4 - 1) + 1)}
-              location={[1, 0, 1]}
-              creationTime={Date.now()}
-              lifeSpan={5000}
-              amount={4}
-            />
-          {/* </>
+        <Constellation
+          speed={Math.floor(Math.random() * (0.05 - 0.02) + 0.02)}
+          key={generateUniqueKey()}
+          colorSeed={Math.floor(Math.random() * (4 - 1) + 1)}
+          location={[1, 0, 1]}
+          creationTime={Date.now()}
+          lifeSpan={5000}
+          amount={4}
+        />
+        {/* </>
         ))} */}
       </>
     );
@@ -623,19 +637,19 @@ function App() {
     return code === 0 ? (
       ""
     ) : (
-        <div style={{ width: "100%", height: "100%" }} className={transition}>
-          <video
-            id="vidContainer2"
-            src={source}
-            style={{
-              opacity: "100%",
-              zIndex: "105",
-            }}
-            autoPlay
+      <div style={{ width: "100%", height: "100%" }} className={transition}>
+        <video
+          id="vidContainer2"
+          src={source}
+          style={{
+            opacity: "100%",
+            zIndex: "105",
+          }}
+          autoPlay
           // loop
-          ></video>
-        </div>
-      );
+        ></video>
+      </div>
+    );
   }
 
   //Finally we return jsx that contains what the end user will see 👀
@@ -664,13 +678,13 @@ function App() {
 
         <Canvas
           className={transition}
-          camera={[0, 0, 0]}
           style={{
             background: "transparent",
             position: "absolute",
             zIndex: "100",
           }}
         >
+          <SceneCam target={camTarget} location={[0, 0, 0]} />
           <OrbitControls
             position={[0, 0, 0]} // Set camera position
             autoRotate={true}
@@ -717,7 +731,7 @@ function App() {
           <PurpleRockPlanet />
           <GasGiant />
           <WaterPlanet />
-          < WhitePlanet />
+          <WhitePlanet />
           {/* {testFunc()} */}
 
           {dataArray &&
