@@ -78,7 +78,7 @@ function App() {
 
   const base = new Airtable({
     apiKey:
-      "patfDwEJuZGFpqDKx.0aedbab77f6c87ce1a448c8a0a7feacf925a5d448dc2f5832a4b135d72bacf0a",
+      "your-api-key-here",
   }).base("appubl7QMpKAxnY1K");
 
   async function init() {
@@ -473,14 +473,12 @@ function App() {
 
     //create offset
     for (let i = 0; i < cAmount; i++) {
-      cOffsetString += `${Math.random() * (8 - 3) - 3}, ${
-        Math.random() * (6 - 4) - 4
-      }, ${Math.random() * (4 - 3) - 3} | `;
+      cOffsetString += `${Math.random() * (8 - 3) - 3}, ${Math.random() * (6 - 4) - 4
+        }, ${Math.random() * (4 - 3) - 3} | `;
     }
 
-    cOffsetString += `${Math.random() * (8 - 3) - 3}, ${
-      Math.random() * (6 - 4) - 4
-    }, ${Math.random() * (4 - 3) - 3}`;
+    cOffsetString += `${Math.random() * (8 - 3) - 3}, ${Math.random() * (6 - 4) - 4
+      }, ${Math.random() * (4 - 3) - 3}`;
 
     // let test = cOffsetString.split(" | ");
     // console.log("cOffsetArray ", test);
